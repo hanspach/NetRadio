@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bookmarks>
+  <country name="Austria" image="austria.png">
+    <station name="ORF" url="http://www.orf.at" image="station.png">
+      <bookmark name="Ö3 Liveradio" url="http://mp3stream7.apasf.apa.at:8000" image="audio.png" />
+      <bookmark name="FM4" url="http://mp3stream1.apasf.apa.at:8000/listen.pls" image="audio.png" />
+      <bookmark name="Burgenland" url="http://194.232.200.146:8000/listen.pls" image="audio.png" />
+      <bookmark name="Niederösterreich" url="http://mp3stream8.apasf.apa.at:8000/listen.pls" image="audio.png" />
+      <bookmark name="Oberösterreich" url="http://194.232.200.148:8000/listen.pls" image="audio.png" />
+      <bookmark name="Salzburg" url="http://194.232.200.147:8000/listen.pls" image="audio.png" />
+      <bookmark name="Steirmark" url="http://mp3stream9.apasf.apa.at:8000/listen.pls" image="audio.png" />
+      <bookmark name="Tirol" url="http://194.232.200.159:8000/listen.pls" image="audio.png" />
+      <bookmark name="Voralberg" url="http://194.232.200.149:8000/listen.pls" image="audio.png" />
+      <bookmark name="Wien" url="http://mp3stream17.apasf.apa.at:8000/" image="audio.png" />
+    </station>
+  </country>
+  <country name="Britain" image="britain.png">
+    <station name="British Broadcasting Company" image="station.png">
+      <bookmark name="BBC4" url="http://www.listenlive.eu/bbcradio4.m3u" image="audio.png" />
+      <bookmark name="BBC5 News" url="http://www.listenlive.eu/bbc5live.m3u" image="audio.png" />
+      <bookmark name="BBC World Service" url="http://www.bbc.co.uk/worldservice/meta/live/mp3/eneuk.pls" image="audio.png" />
+    </station>
+  </country>
+  <country name="Germany" image="germany.png">
+    <station name="Antenne 1 Baden-Würtemberg" url="http://www.antenne1.de" image="station.png">
+      <bookmark name="Antenne 1" url="http://stream.antenne1.de/stream1/livestream.mp3" image="audio.png" />
+    </station>
+    <station name="Antenne Bayern" url="http://www.antenne.de" image="station.png">
+      <bookmark name="Antenne" url="http://mp3channels.webradio.antenne.de/antenne" image="audio.png" />
+      <bookmark name="80er-Hits" url="http://mp3channels.webradio.antenne.de/80er-kulthits" image="audio.png" />
+      <bookmark name="90er-Hits" url="http://mp3channels.webradio.antenne.de/90er-hits" image="audio.png" />
+      <bookmark name="Black-Beatz" url="http://mp3channels.webradio.antenne.de/black-beatz" image="audio.png" />
+      <bookmark name="Chillout" url="http://mp3channels.webradio.antenne.de/chillout" image="audio.png" />
+      <bookmark name="Classic-Rock-Live" url="http://mp3channels.webradio.antenne.de/classic-rock-live" image="audio.png" />
+      <bookmark name="Event" url="http://mp3channels.webradio.antenne.de/event" image="audio.png" />
+      <bookmark name="Fresh" url="http://mp3channels.webradio.antenne.de/fresh" image="audio.png" />
+      <bookmark name="Hits for Kids" url="http://mp3channels.webradio.antenne.de/hits-fuer-kids" image="audio.png" />
+      <bookmark name="Lovesongs" url="http://mp3channels.webradio.antenne.de/lovesongs" image="audio.png" />
+      <bookmark name="New Hits" url="http://mp3channels.webradio.antenne.de/new-hits" image="audio.png" />
+      <bookmark name="Oldies" url="http://mp3channels.webradio.antenne.de/oldies-but-goldies" image="audio.png" />
+      <bookmark name="Rockantenne" url="http://mp3channels.webradio.antenne.de/rockantenne" image="audio.png" />
+      <bookmark name="Schlager-Karussell" url="http://mp3channels.webradio.antenne.de/das-schlager-karussell" image="audio.png" />
+      <bookmark name="TOP40" url="http://mp3channels.webradio.antenne.de/top-40" image="audio.png" />
+      <bookmark name="Weihnachts-Hits" url="http://mp3channels.webradio.antenne.de/weihnachts-hits" image="audio.png" />
+      <bookmark name="Workout Hits" url="http://mp3channels.webradio.antenne.de/workout-hits" image="audio.png" />
+    </station>
+    <station name="AntenneMV" url="http://www.antennemv.de" image="station.png">
+      <bookmark name="AntenneMV live" url="http://streams.antennemv.de/antennemv-live/mp3-192/amv" image="audio.png" />
+    </station>
+    <station name="Bayrischer Rundfunk" url="http://www.br.de" image="station.png">
+      <bookmark name="Volksmusik/Oldies" url="http://streams.br.de/bayern1_2.m3u" image="audio.png" />
+      <bookmark name="Hörspiele/Diskussionen" url="http://streams.br.de/bayern2_2.m3u" image="audio.png" />
+      <bookmark name="Pop/Rock" url="http://streams.br.de/bayern3_2.m3u" image="audio.png" />
+      <bookmark name="Klassik" url="http://streams.br.de/br-klassik_2.m3u" image="audio.png" />
+      <bookmark name="Nachrichten" url="http://streams.br.de/b5aktuell_2.m3u" image="audio.png" />
+      <bookmark name="Politik/Sport" url="http://streams.br.de/b5plus_2.m3u" image="audio.png" />
+      <bookmark name="Schlager/Volksmusik" url="http://streams.br.de/bayernplus_2.m3u" image="audio.png" />
+      <bookmark name="Jugendkanal" url="http://streams.br.de/puls_2.m3u" image="audio.png" />
+    </station>
+    <station name="Deutschland Radio" url="http://www.dradio.de" image="station.png">
+      <bookmark name="Deutschlandfunk" url="http://dradio-ogg-dlf-l.akacast.akamaistream.net/7/629/135496/v1/gnl.akacast.akamaistream.net/dradio_ogg_dlf_l" image="audio.png" />
+      <bookmark name="Deutschlandradio Kultur" url="http://www.dradio.de/streaming/dkultur_mq_ogg.m3u" image="audio.png" />
+    </station>
+    <station name="Mitteldeutscher Rundfunk" image="station.png">
+      <bookmark name="MDR1" url="http://avw.mdr.de/livestreams/mdr1_radio_sachsen_live_128.m3u" image="audio.png" />
+      <bookmark name="MDR Klassik" url="http://avw.mdr.de/livestreams/mdr_figaro_classic_128.m3u" image="audio.png" />
+    </station>
+    <station name="Radio PSR" url="http://www.radiopsr.de" image="station.png">
+      <bookmark name="PSR" url="http://streams.radiopsr.de/psr-live/mp3-192/listenlive/play.m3u" image="audio.png" />
+    </station>
+    <station name="Hessischer Rundfunk" image="station.png">
+      <bookmark name="HR1" url="http://metafiles.gl-systemhaus.de/hr/hr1_2.m3u" image="audio.png" />
+      <bookmark name="HR2" url="http://metafiles.gl-systemhaus.de/hr/hr2_2.m3u" image="audio.png" />
+      <bookmark name="HR3" url="http://metafiles.gl-systemhaus.de/hr/hr3_2.m3u" image="audio.png" />
+      <bookmark name="HR4" url="http://metafiles.gl-systemhaus.de/hr/hr4_2.m3u" image="audio.png" />
+      <bookmark name="HR Info" url="http://metafiles.gl-systemhaus.de/hr/hrinfo_2.m3u" image="audio.png" />
+    </station>
+    <station name="Nordeutscher Rundfunk" image="station.png">
+      <bookmark name="Hamburg Welle 90.3" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndr903.m3u" image="audio.png" />
+      <bookmark name="NDR Info" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndrinfo.m3u" image="audio.png" />
+      <bookmark name="NDR1 Welle Nord" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndr1wellenord.m3u" image="audio.png" />
+      <bookmark name="NDR2" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndr2.m3u" image="audio.png" />
+      <bookmark name="NDR Kultur" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndrkultur.m3u" image="audio.png" />
+      <bookmark name="NDR Musik Plus" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndrmusikplus.m3u" image="audio.png" />
+      <bookmark name="N-JOY" url="http://www.ndr.de/resources/metadaten/audio/m3u/n-joy.m3u" image="audio.png" />
+    </station>
+    <station name="rbb" url="http://www.rbb-online.de" image="station.png">
+      <bookmark name="kulturradio" url="http://kulturradio.de/live.m3u" image="audio.png" />
+      <bookmark name="radio 1" url="http://radioeins.de/live.m3u" image="audio.png" />
+      <bookmark name="Radio Fritz" url="http://www.fritz.de/live.m3u" image="audio.png" />
+      <bookmark name="Info-Radio" url="http://inforadio.de/live.m3u" image="audio.png" />
+      <bookmark name="Radio Berlin" url="http://radioberlin.de/live.m3u" image="audio.png" />
+      <bookmark name="Antenne Brandenburg" url="http://www.antennebrandenburg.de/live.m3u" image="audio.png" />
+    </station>
+    <station name="ERF Radio" image="station.png">
+      <bookmark name="ERF Plus" url="http://c14000-l.i.core.cdn.streamfarm.net/14000cina/live/3212erf_96/live_de_96.mp3" image="audio.png" />
+    </station>
+    <station name="Saarländischer Rundfunk" url="http://sr-online.de" image="station.png">
+      <bookmark name="SR1" url="http://streaming01.sr-online.de/sr1_2.m3u" image="audio.png" />
+      <bookmark name="SR1-Klassiker" url="http://streaming02.sr-online.de/sr1klassiker.m3u" image="audio.png" />
+      <bookmark name="SR1_Lounge" url="http://streaming02.sr-online.de/sr1lounge.m3u" image="audio.png" />
+      <bookmark name="SR2" url="http://streaming01.sr-online.de/sr2_2.m3u" image="audio.png" />
+      <bookmark name="SR2-Offbeat" url="http://streaming02.sr-online.de/sr2offbeat.m3u" image="audio.png" />
+      <bookmark name="SR3-Oldiewelt" url="http://streaming02.sr-online.de/sr3oldiewelt.m3u" image="audio.png" />
+      <bookmark name="SR3" url="http://swr-mp3-m-swr3.akacast.akamaistream.net/7/720/137136/v1/gnl.akacast.akamaistream.net/swr-mp3-m-swr3" image="audio.png" />
+      <bookmark name="SR3-Schlagerwelt" url="http://streaming02.sr-online.de/sr3schlagerwelt.m3u" image="audio.png" />
+    </station>
+    <station name="SWR" url="http://swr.de" image="station.png">
+      <bookmark name="SWR1 BW" url="http://mp3-live.swr.de/swr1bw_s.m3u" image="audio.png" />
+      <bookmark name="SWR1 RP" url="http://mp3-live.swr.de/swr1rp_s.m3u" image="audio.png" />
+      <bookmark name="SWR2" url="http://mp3-live.swr.de/swr2_s.m3u" image="audio.png" />
+      <bookmark name="SWR3" url="http://mp3-live.swr3.de/swr3_s.m3u" image="audio.png" />
+      <bookmark name="SWR4 Stuttgart" url="http://mp3-live.swr.de/swr4bw_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Friedrichshafen" url="http://mp3-live.swr.de/swr4fn_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Freiburg" url="http://mp3-live.swr.de/swr4fr_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Heilbronn" url="http://mp3-live.swr.de/swr4hn_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Karlsruhe" url="http://mp3-live.swr.de/swr4ka_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Kaiserslautern" url="http://mp3-live.swr.de/swr4kl_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Koblenz" url="http://mp3-live.swr.de/swr4ko_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Ludwigshafen" url="http://mp3-live.swr.de/swr4lu_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Mannheim" url="http://mp3-live.swr.de/swr4ma_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Mainz" url="http://mp3-live.swr.de/swr4rp_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Trier" url="http://mp3-live.swr.de/swr4tr_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Tübingen" url="http://mp3-live.swr.de/swr4tu_m.m3u" image="audio.png" />
+      <bookmark name="SWR4 Ulm" url="http://mp3-live.swr.de/swr4ul_m.m3u" image="audio.png" />
+      <bookmark name="Contra" url="http://mp3-live.swr.de/contra_s.m3u" image="audio.png" />
+      <bookmark name="Das Ding" url="http://mp3-live.dasding.de/dasding_m.m3u" image="audio.png" />
+    </station>
+    <station name="WDR" image="station.png">
+      <bookmark name="WDR1" url="http://www.wdr.de/wdrlive/media/einslive.m3u" image="audio.png" />
+      <bookmark name="WDR2" url="http://www.wdr.de/wdrlive/media/wdr2.m3u" image="audio.png" />
+      <bookmark name="WDR3" url="http://www.wdr.de/wdrlive/media/wdr3.m3u" image="audio.png" />
+      <bookmark name="WDR4 Media" url="http://www.wdr.de/wdrlive/media/wdr4.m3u" image="audio.png" />
+      <bookmark name="WDR5" url="http://www.wdr.de/wdrlive/media/wdr5.m3u" image="audio.png" />
+    </station>
+  </country>
+  <country name="Switzerland" image="switzerland.png">
+    <station name="Schweizer Radio" image="station.png">
+      <bookmark name="SRF_1" url="http://stream.srg-ssr.ch/drs1/mp3_128.m3u" image="audio.png" />
+      <bookmark name="SRF_2" url="http://stream.srg-ssr.ch/drs2/mp3_128.m3u" image="audio.png" />
+      <bookmark name="SRF_3" url="http://stream.srg-ssr.ch/drs3/mp3_128.m3u" image="audio.png" />
+      <bookmark name="SRF News" url="http://stream.srg-ssr.ch/drs4news/mp3_128.m3u" image="audio.png" />
+    </station>
+  </country>
+</bookmarks>

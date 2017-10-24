@@ -1,0 +1,199 @@
+﻿<Window x:Class="NetRadio.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NetRadio"
+        xmlns:viewmodels="clr-namespace:NetRadio.ViewModels"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop" 
+        mc:Ignorable="d"
+        Title="Online-Radio" Height="460" Width="760" Closing="MainWindow_Closing">
+    <Window.Resources>
+        <!-- Hintergrund für MainWindow -->
+        <LinearGradientBrush x:Key="MainBackground" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Offset="0" Color="Black"/>
+            <GradientStop Offset="0.25" Color="Black"/>
+            <GradientStop Offset="1" Color="Gray"/>
+        </LinearGradientBrush>
+
+        <!--  Hintergrund TreeView-->
+        <LinearGradientBrush x:Key="TreeViewBackground" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Offset="0" Color="LightGray"/>
+            <GradientStop Offset="0.5" Color="LightGray"/>
+            <GradientStop Offset="1" Color="AntiqueWhite"/>
+        </LinearGradientBrush>
+
+        <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border  BorderThickness="1" BorderBrush="Black" Background="Black" Height="3"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" Background="Green"  BorderThickness="1" BorderBrush="YellowGreen" Height="3"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderThumb" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Ellipse Height="10" Width="10" Fill="Green"></Ellipse>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="Slider"  TargetType="Slider">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Track Grid.Row="1" x:Name="PART_Track">
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton1}"  Command="Slider.DecreaseLarge" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource SliderThumb}"  />
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton}" Command="Slider.IncreaseLarge" />
+                    </Track.IncreaseRepeatButton>
+                </Track>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="Horizontal_Slider" TargetType="Slider">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="MinHeight" Value="21" />
+                    <Setter Property="MinWidth" Value="104" />
+                    <Setter Property="Template" Value="{StaticResource Slider}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <DataTemplate DataType="{x:Type viewmodels:EditViewModel}">
+            <local:EditView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:BrowserViewModel}">
+            <local:BrowserView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:VisualViewModel}">
+            <local:VisualView />
+        </DataTemplate>
+        <Style x:Key="btnStyle" TargetType="{x:Type Button}">
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="Width" Value="18" />
+            <Setter Property="Height" Value="18" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Content" Value="/Resources/play.png" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},Path=IsPressed}" Value="True">
+                    <Setter Property="Content" Value="/Resources/pause.png" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <DockPanel Background="{StaticResource MainBackground}">
+        <DockPanel.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="ImageButton.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </DockPanel.Resources>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" DataContext="{Binding Message}">
+                    <Rectangle Fill="{Binding Path=StatusColorString}" Width="16" Height="16" RadiusX="5" RadiusY="5" Margin="0 0 2 0"/>
+                    <TextBlock Text="{Binding Path=Text}"/>
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="btnVisual" Content="/Resources/NewDoc.png" Command="{Binding VisualViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="VisualView" />
+                    <Button x:Name="btnEdit" Content="/Resources/Modify.png" Command="{Binding EditViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="EditView"/>
+                    <Button x:Name="btnBrowser" Content="/Resources/Home.png"  Command="{Binding BrowserViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="BrowserView" />
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
+        <StackPanel Margin="20,5"  Orientation="Horizontal" DockPanel.Dock="Bottom">
+            <Button Content="{Binding PlayButtonIconPath}" Command="{Binding PlayProgramCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Play" />
+            <Button Content="/Resources/volume.png" Template="{StaticResource ImageButton}" Command="{Binding MuteCommand}"  Style="{StaticResource btnStyle}" ToolTip="Volume" />
+            <Slider x:Name="slider" TickPlacement="None" Value="{Binding Volume}" Style="{StaticResource Horizontal_Slider}"
+                IsSnapToTickEnabled="True" IsSelectionRangeEnabled="True" Minimum="0" Maximum="100" Margin="5 0" />
+        </StackPanel>
+        <Grid x:Name="grid"  Margin="0,1,0,-1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="20" />
+                <ColumnDefinition Width="Auto"  />
+                <ColumnDefinition  />
+            </Grid.ColumnDefinitions>
+            <Expander Grid.Column="0" ExpandDirection="Right" IsExpanded="True">
+                <i:Interaction.Behaviors>
+                    <local:ExpanderBehavior />
+                </i:Interaction.Behaviors>
+                <TreeView Name="tv"  ItemsSource="{Binding CountryModel}" SelectedItemChanged="tv_SelectedItemChanged" 
+                    dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" Background="{StaticResource TreeViewBackground}">
+                    <TreeView.ItemContainerStyle>
+                        <Style  TargetType="{x:Type TreeViewItem}">
+                            <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type viewmodels:Country}" ItemsSource="{Binding Stations}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding ImagePath}" Width="16" Height="16" />
+                                <TextBlock Text="{Binding Name}" Margin="2"/>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type viewmodels:Station}" ItemsSource="{Binding Programs}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding ImagePath}" Width="16" Height="16" />
+                                <TextBlock Text="{Binding Name}" Margin="2" />
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                        <DataTemplate DataType="{x:Type viewmodels:Program}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding ImagePath}" Width="16" Height="16" />
+                                <TextBlock Text="{Binding Name}" Margin="2" />
+                            </StackPanel>
+                        </DataTemplate>
+                        <Style TargetType="{x:Type ScrollViewer}">
+                            <Setter Property="Template" Value="{DynamicResource AppleStyleScrollBarStyle}" />
+                        </Style>
+                    </TreeView.Resources>
+                </TreeView>
+            </Expander>
+            <GridSplitter x:Name="splitter" Grid.Column="1" Width="5" HorizontalAlignment="Right"
+              VerticalAlignment="Stretch" ResizeBehavior="PreviousAndNext" />
+            <ContentControl Grid.Column="2" Content="{Binding CurrentViewModel}" />
+        </Grid>
+    </DockPanel>
+</Window>

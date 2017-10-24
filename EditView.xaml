@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="NetRadio.EditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodels="clr-namespace:NetRadio.ViewModels"
+             xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type viewmodels:EditViewModel}" />
+        <Style x:Key="btnStyle" TargetType="{x:Type Button}">
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="Width" Value="18" />
+            <Setter Property="Height" Value="18" />
+        </Style>
+        <Style x:Key="tbstyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="AntiqueWhite" />
+        </Style>
+    </UserControl.Resources>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Margin="5">
+            <Grid Margin="0 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource tbstyle}" Text="Icon:" />
+                <ComboBox Grid.Row="0" Grid.Column="1" Name="cbImages" Margin="5,2"
+                    HorizontalAlignment="Left" ItemsSource="{Binding ImagePathes}"  Width="60" Height="24"
+                    SelectedItem="{Binding CurrentImage}" MouseDown="cbImages_MouseDown">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Image Width="16" Height="16" Source="{Binding ImagePath}" Selector.IsSelected="{Binding IsSelected}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Left" Style="{StaticResource tbstyle}" Text="Name:" Width="50" />
+                <TextBox Text="{Binding Path=ProgramName, UpdateSourceTrigger=PropertyChanged}" BorderThickness="{Binding Path=NameFieldThickness}" 
+                      Margin="5" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" KeyDown="TextBox_KeyDown" />
+            </DockPanel>
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Left" Style="{StaticResource tbstyle}" Text="Url:" Width="50" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=ProgramUrl, UpdateSourceTrigger=PropertyChanged}" BorderThickness="{Binding Path=UrlFieldThickness}" 
+                       Margin="5" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" KeyDown="TextBox_KeyDown" />
+            </DockPanel>
+            <StackPanel Orientation="Horizontal" >
+                <StackPanel.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.MergedDictionaries>
+                            <ResourceDictionary Source="ImageButton.xaml"/>
+                        </ResourceDictionary.MergedDictionaries>
+                    </ResourceDictionary>
+                </StackPanel.Resources>
+                <Button Content="/Resources/NewDoc.png" Command="{Binding NewEntryCommand}"  Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Neuer Eintrag"/>
+                <Button x:Name="btnAdd" Content="/Resources/Database.png" Command="{Binding AddEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Daten übernehmen"/>
+                <Button Content="/Resources/Erase.png"  Command="{Binding DeleteEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Eintrag löschen" />
+            </StackPanel>
+        </StackPanel>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <DataGrid x:Name="grid" Margin="0" ItemsSource="{Binding JsonProgramList}" SelectedItem="{Binding CurrentProgramProps}" AutoGenerateColumns="False"
+                 CanUserAddRows="False" IsReadOnly="True" dd:DragDrop.IsDragSource="True" >
+                <DataGrid.Resources>
+                    <DataTemplate x:Key="streamie" DataType="viewmodels:ProgramProps" >
+                        <ComboBox SelectedItem="{Binding CurrentStream, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Streams}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Url}" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </DataTemplate>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Programm" Binding="{Binding Name}" Width="100" />
+                    <DataGridTemplateColumn Header="URLs" CellTemplate="{StaticResource streamie}" CellEditingTemplate="{StaticResource streamie}" Width="250" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>
