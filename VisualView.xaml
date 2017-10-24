@@ -15,7 +15,7 @@
             <GroupBox.Header>
                 <Label Foreground="AntiqueWhite">Metadata</Label>
             </GroupBox.Header>
-            <ComboBox x:Name="cbmeta" ItemsSource="{Binding Metadata}" SelectedItem="{Binding SelectedMeta}" Height="24" Margin="5">
+            <ComboBox x:Name="cbmeta" ItemsSource="{Binding Metadata}" SelectedItem="{Binding SelectedMeta,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="24" Margin="5">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>

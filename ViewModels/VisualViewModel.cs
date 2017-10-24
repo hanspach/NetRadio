@@ -24,14 +24,17 @@ namespace NetRadio.ViewModels
                 SetProperty<IList<MetadataModel>>(ref metadata, value);
                 if (metadata != null)
                 {
-                    foreach (MetadataModel meta in Metadata)
+                    int i;
+                    for (i=0; i < Metadata.Count; ++i)
                     {
-                        if (meta.Name == "icy-name")
+                        if (Metadata[i].Name == "icy-name")
                         {
-                            SelectedMeta = meta;
+                            SelectedMeta = Metadata[i];
                             break;
                         }
                     }
+                    if (i == Metadata.Count)            // nothings found
+                        SelectedMeta = Metadata[0];     // take the first entry
                 }
             }
         }
@@ -67,25 +70,19 @@ namespace NetRadio.ViewModels
             string msg = args.Argument as string;
             string title = string.Empty;
             string actor = string.Empty;
-            int a = msg.IndexOf(" -- ");
-            int e = msg.LastIndexOf(" -- ");
-            if (a != -1 && e != -1)
+            string[] separators = new string[] { " - ", ": "," -- "};
+            string[] res = msg.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            if(res.Length == 2)
             {
-                a += 4;
-                title = msg.Substring(a, (e - a));
-                e += 4;
-                actor = msg.Substring(e);
+                title = res[1];
+                actor = res[0];
             }
-            else
+            else if(res.Length == 3)
             {
-                a = msg.IndexOf(" - ");
-                if (a != -1 && e != a)
-                {
-                    actor = msg.Substring(0, a);
-                    a += 3;
-                    title = msg.Substring(a);
-                }
+                title = res[1];
+                actor = res[2];
             }
+            Console.WriteLine("Title:{0}, Sänger:{1}",title,actor);
             if (title.Length > 0 && actor.Length > 0)
             {
                 try
