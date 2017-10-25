@@ -55,9 +55,9 @@
                         </ResourceDictionary.MergedDictionaries>
                     </ResourceDictionary>
                 </StackPanel.Resources>
-                <Button Content="/Resources/NewDoc.png" Command="{Binding NewEntryCommand}"  Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Neuer Eintrag"/>
-                <Button x:Name="btnAdd" Content="/Resources/Database.png" Command="{Binding AddEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Daten übernehmen"/>
-                <Button Content="/Resources/Erase.png"  Command="{Binding DeleteEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Eintrag löschen" />
+                <Button Content="pack://application:,,,/Resources/NewDoc.png" Command="{Binding NewEntryCommand}"  Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Neuer Eintrag"/>
+                <Button Content="pack://application:,,,/Resources/Database.png" Command="{Binding AddEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Daten übernehmen"/>
+                <Button Content="pack://application:,,,/Resources/Erase.png"  Command="{Binding DeleteEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Eintrag löschen" />
             </StackPanel>
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">

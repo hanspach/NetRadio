@@ -58,15 +58,12 @@
       <bookmark name="Jugendkanal" url="http://streams.br.de/puls_2.m3u" image="audio.png" />
     </station>
     <station name="Deutschland Radio" url="http://www.dradio.de" image="station.png">
-      <bookmark name="Deutschlandfunk" url="http://dradio-ogg-dlf-l.akacast.akamaistream.net/7/629/135496/v1/gnl.akacast.akamaistream.net/dradio_ogg_dlf_l" image="audio.png" />
+      <bookmark name="Deutschlandfunk" url="http://www.deutschlandradio.de/streaming/dlf_lq_mp3.m3u" image="audio.png" />
       <bookmark name="Deutschlandradio Kultur" url="http://www.dradio.de/streaming/dkultur_mq_ogg.m3u" image="audio.png" />
+      <bookmark name="DLF Nova" url="http://www.deutschlandradio.de/streaming/dradiowissen_lq_mp3.m3u" image="audio.png" />
     </station>
-    <station name="Mitteldeutscher Rundfunk" image="station.png">
-      <bookmark name="MDR1" url="http://avw.mdr.de/livestreams/mdr1_radio_sachsen_live_128.m3u" image="audio.png" />
-      <bookmark name="MDR Klassik" url="http://avw.mdr.de/livestreams/mdr_figaro_classic_128.m3u" image="audio.png" />
-    </station>
-    <station name="Radio PSR" url="http://www.radiopsr.de" image="station.png">
-      <bookmark name="PSR" url="http://streams.radiopsr.de/psr-live/mp3-192/listenlive/play.m3u" image="audio.png" />
+    <station name="ERF Radio" image="station.png">
+      <bookmark name="ERF Plus" url="http://c14000-l.i.core.cdn.streamfarm.net/14000cina/live/3212erf_96/live_de_96.mp3" image="audio.png" />
     </station>
     <station name="Hessischer Rundfunk" image="station.png">
       <bookmark name="HR1" url="http://metafiles.gl-systemhaus.de/hr/hr1_2.m3u" image="audio.png" />
@@ -75,14 +72,21 @@
       <bookmark name="HR4" url="http://metafiles.gl-systemhaus.de/hr/hr4_2.m3u" image="audio.png" />
       <bookmark name="HR Info" url="http://metafiles.gl-systemhaus.de/hr/hrinfo_2.m3u" image="audio.png" />
     </station>
+    <station name="Mitteldeutscher Rundfunk" image="station.png">
+      <bookmark name="MDR Sachsen" url="http://avw.mdr.de/streams/284280-0_mp3_high.m3u" image="audio.png" />
+      <bookmark name="MDR Klassik" url="http://avw.mdr.de/streams/284350-0_mp3_high.m3u" image="audio.png" />
+      <bookmark name="MDR Schlagerwelt" url="http://avw.mdr.de/streams/990801-0_mp3_high.m3u" image="audio.png" />
+    </station>
     <station name="Nordeutscher Rundfunk" image="station.png">
       <bookmark name="Hamburg Welle 90.3" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndr903.m3u" image="audio.png" />
       <bookmark name="NDR Info" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndrinfo.m3u" image="audio.png" />
       <bookmark name="NDR1 Welle Nord" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndr1wellenord.m3u" image="audio.png" />
       <bookmark name="NDR2" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndr2.m3u" image="audio.png" />
       <bookmark name="NDR Kultur" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndrkultur.m3u" image="audio.png" />
-      <bookmark name="NDR Musik Plus" url="http://www.ndr.de/resources/metadaten/audio/m3u/ndrmusikplus.m3u" image="audio.png" />
       <bookmark name="N-JOY" url="http://www.ndr.de/resources/metadaten/audio/m3u/n-joy.m3u" image="audio.png" />
+    </station>
+    <station name="Radio PSR" url="http://www.radiopsr.de" image="station.png">
+      <bookmark name="PSR" url="http://streams.radiopsr.de/psr-live/mp3-192/listenlive/play.m3u" image="audio.png" />
     </station>
     <station name="rbb" url="http://www.rbb-online.de" image="station.png">
       <bookmark name="kulturradio" url="http://kulturradio.de/live.m3u" image="audio.png" />
@@ -91,9 +95,6 @@
       <bookmark name="Info-Radio" url="http://inforadio.de/live.m3u" image="audio.png" />
       <bookmark name="Radio Berlin" url="http://radioberlin.de/live.m3u" image="audio.png" />
       <bookmark name="Antenne Brandenburg" url="http://www.antennebrandenburg.de/live.m3u" image="audio.png" />
-    </station>
-    <station name="ERF Radio" image="station.png">
-      <bookmark name="ERF Plus" url="http://c14000-l.i.core.cdn.streamfarm.net/14000cina/live/3212erf_96/live_de_96.mp3" image="audio.png" />
     </station>
     <station name="Saarländischer Rundfunk" url="http://sr-online.de" image="station.png">
       <bookmark name="SR1" url="http://streaming01.sr-online.de/sr1_2.m3u" image="audio.png" />

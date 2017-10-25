@@ -49,3 +49,9 @@ Temporary Items
 /obj/Debug
 /.vs
 /packages
+/obj/Release
+/Properties
+/App.config
+/NetRadio.csproj
+/NetRadio.sln
+/packages.config

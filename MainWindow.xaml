@@ -111,10 +111,10 @@
             <Setter Property="Height" Value="18" />
         </Style>
         <Style TargetType="Button">
-            <Setter Property="Content" Value="/Resources/play.png" />
+            <Setter Property="Content" Value="pack://application:,,,/Resources/play.png" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},Path=IsPressed}" Value="True">
-                    <Setter Property="Content" Value="/Resources/pause.png" />
+                    <Setter Property="Content" Value="pack://application:,,,/Resources/pause.png" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -137,15 +137,15 @@
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="btnVisual" Content="/Resources/NewDoc.png" Command="{Binding VisualViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="VisualView" />
-                    <Button x:Name="btnEdit" Content="/Resources/Modify.png" Command="{Binding EditViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="EditView"/>
-                    <Button x:Name="btnBrowser" Content="/Resources/Home.png"  Command="{Binding BrowserViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="BrowserView" />
+                    <Button x:Name="btnVisual" Content="pack://application:,,,/Resources/NewDoc.png" Command="{Binding VisualViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="VisualView" />
+                    <Button x:Name="btnEdit" Content="pack://application:,,,/Resources/Modify.png" Command="{Binding EditViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="EditView"/>
+                    <Button x:Name="btnBrowser" Content="pack://application:,,,/Resources/Home.png"  Command="{Binding BrowserViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="BrowserView" />
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
         <StackPanel Margin="20,5"  Orientation="Horizontal" DockPanel.Dock="Bottom">
             <Button Content="{Binding PlayButtonIconPath}" Command="{Binding PlayProgramCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Play" />
-            <Button Content="/Resources/volume.png" Template="{StaticResource ImageButton}" Command="{Binding MuteCommand}"  Style="{StaticResource btnStyle}" ToolTip="Volume" />
+            <Button Content="pack://application:,,,/Resources/volume.png" Template="{StaticResource ImageButton}" Command="{Binding MuteCommand}"  Style="{StaticResource btnStyle}" ToolTip="Volume" />
             <Slider x:Name="slider" TickPlacement="None" Value="{Binding Volume}" Style="{StaticResource Horizontal_Slider}"
                 IsSnapToTickEnabled="True" IsSelectionRangeEnabled="True" Minimum="0" Maximum="100" Margin="5 0" />
         </StackPanel>
