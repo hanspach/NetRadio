@@ -82,7 +82,7 @@ namespace NetRadio.ViewModels
                 title = res[1];
                 actor = res[2];
             }
-            Console.WriteLine("Title:{0}, Sänger:{1}",title,actor);
+            
             if (title.Length > 0 && actor.Length > 0)
             {
                 try

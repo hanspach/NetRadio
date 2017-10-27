@@ -39,6 +39,14 @@ namespace NetRadio.ViewModels
             set { SetProperty<bool>(ref isSelected, value);}
         }
 
+        private bool isNodeExpanded;
+        public bool IsNodeExpanded
+        {
+            get { return isNodeExpanded; }
+            set { SetProperty<bool>(ref isNodeExpanded, value); }
+        }
+
+
         public Item Parent { get; set; }
 
         public Item(string name, string url, string imgPath)

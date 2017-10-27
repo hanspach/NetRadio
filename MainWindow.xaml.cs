@@ -1,5 +1,6 @@
 ﻿using log4net;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 
@@ -17,7 +18,10 @@ namespace NetRadio
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new ViewModels.MainWindowViewModel();
+            var model = new ViewModels.MainWindowViewModel();
+            DataContext = model;
+            if(!string.IsNullOrEmpty(ViewModels.Settings.LastVisitedUrl))
+                model.FindTreeNode(ViewModels.Settings.LastVisitedUrl);
         }
 
         private void tv_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -38,7 +42,7 @@ namespace NetRadio
                     }
                 }
                 model.EditViewModel.ResetProperties();
-                model.Message = new ViewModels.MessageModel(string.Empty);
+                model.Message = new ViewModels.MessageModel(string.Empty); // ????
                 model.PlayButtonIconPath = ViewModels.Settings.ResourcePath + "play.png";
                 model.HasPlayed = false;
                 if (item is ViewModels.Program)
@@ -63,6 +67,7 @@ namespace NetRadio
                         ViewModels.CountryModel.Instance.WriteBookmarks(ViewModels.Settings.ResourcePath + "bookmarks.xml");
                     }
                 }
+                ViewModels.Settings.SaveSettings();
                 ViewModels.WebRadioControl.Instance.CloseBass();
             }
             catch (Exception ex)

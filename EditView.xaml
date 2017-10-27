@@ -29,7 +29,7 @@
                 <TextBlock Style="{StaticResource tbstyle}" Text="Icon:" />
                 <ComboBox Grid.Row="0" Grid.Column="1" Name="cbImages" Margin="5,2"
                     HorizontalAlignment="Left" ItemsSource="{Binding ImagePathes}"  Width="60" Height="24"
-                    SelectedItem="{Binding CurrentImage}" MouseDown="cbImages_MouseDown">
+                    SelectedItem="{Binding CurrentImage}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <Image Width="16" Height="16" Source="{Binding ImagePath}" Selector.IsSelected="{Binding IsSelected}"/>
@@ -55,9 +55,9 @@
                         </ResourceDictionary.MergedDictionaries>
                     </ResourceDictionary>
                 </StackPanel.Resources>
-                <Button Content="pack://application:,,,/Resources/NewDoc.png" Command="{Binding NewEntryCommand}"  Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Neuer Eintrag"/>
-                <Button Content="pack://application:,,,/Resources/Database.png" Command="{Binding AddEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Daten übernehmen"/>
-                <Button Content="pack://application:,,,/Resources/Erase.png"  Command="{Binding DeleteEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Eintrag löschen" />
+                <Button Content="pack://application:,,,/Resources/NewDoc.png" Command="{Binding NewEntryCommand}"  Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="New entry"/>
+                <Button Content="pack://application:,,,/Resources/Database.png" Command="{Binding AddEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Transfer data"/>
+                <Button Content="pack://application:,,,/Resources/Erase.png"  Command="{Binding DeleteEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Delete entry" />
             </StackPanel>
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Windows.Interop;
 using WPFSoundVisualizationLib;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace NetRadio.ViewModels
 {
@@ -217,17 +218,16 @@ namespace NetRadio.ViewModels
         {
             var meta = Bass.ChannelGetTags(chan, TagType.META);
             string data = string.Empty;
-            int a, e;
-
+           
             if (meta != IntPtr.Zero)
             {
-                data = Marshal.PtrToStringAnsi(meta);   // got Shoutcast metadata
-                a = data.IndexOf('\'');
-                e = data.IndexOf("';");
-                if (a != -1 && e != -1)
+                string res = Marshal.PtrToStringAnsi(meta);   // got Shoutcast metadata
+                string[] parts = res.Split('\'');
+                if (parts.Length > 1)
                 {
-                    data = data.Substring(a + 1, (e - a - 1));
+                    data = parts[1];
                 }
+                data = data.TrimEnd(new char[] { '\r','\n' });  // remove new line
             }
             else
             {

@@ -13,10 +13,5 @@ namespace NetRadio
         {
             ViewModels.Settings.IsDirty = true;
         }
-
-        private void cbImages_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            System.Console.WriteLine("MoseDown"); ViewModels.Settings.IsDirty = true;
-        }
     }
 }
