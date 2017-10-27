@@ -9,6 +9,7 @@ using System.Windows.Interop;
 using WPFSoundVisualizationLib;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace NetRadio.ViewModels
 {
@@ -90,7 +91,6 @@ namespace NetRadio.ViewModels
 
             // minimize automatic pre-buffering, so we can do it (and display it) instead
             Bass.NetPreBuffer = 0;
-          //  Bass.Volume = 0.25;         
             timer = new Timer(50);
             timer.Elapsed += elapsedTime;
         }
@@ -222,6 +222,10 @@ namespace NetRadio.ViewModels
             if (meta != IntPtr.Zero)
             {
                 string res = Marshal.PtrToStringAnsi(meta);   // got Shoutcast metadata
+                byte[] ba = new byte[res.Length];
+                Marshal.Copy(meta,ba, 0, ba.Length);
+                Encoding enc = new UTF8Encoding();
+                res = enc.GetString(ba, 0, ba.Length);
                 string[] parts = res.Split('\'');
                 if (parts.Length > 1)
                 {

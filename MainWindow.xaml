@@ -141,9 +141,9 @@
             <Slider x:Name="slider" VerticalAlignment="Center" TickPlacement="None" Value="{Binding Volume}" Style="{StaticResource Horizontal_Slider}"
                 IsSnapToTickEnabled="True" IsSelectionRangeEnabled="True" Minimum="0" Maximum="100" Margin="5 0" />
             <TextBlock Text="Favorites" Margin="5 2" VerticalAlignment="Center" />
-            <Button Content="pack://application:,,,/Resources/Ok.png" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" Command="{Binding Favorite1Command}" />
-            <Button Content="pack://application:,,,/Resources/Ok.png" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" Command="{Binding Favorite2Command}" />
-            <Button Content="pack://application:,,,/Resources/Ok.png"  Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" Command="{Binding Favorite3Command}" />
+            <Button Content="pack://application:,,,/Resources/one.png" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" Command="{Binding Favorite1Command}" ToolTip="{Binding Favorite1Name}"/>
+            <Button Content="pack://application:,,,/Resources/two.png" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" Command="{Binding Favorite2Command}" ToolTip="{Binding Favorite2Name}"/>
+            <Button Content="pack://application:,,,/Resources/three.png"  Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" Command="{Binding Favorite3Command}" ToolTip="{Binding Favorite3Name}"/>
             <Button Content="{Binding FavoriteButtonIconPath}" Command="{Binding AddFavoriteCommand}" Background="White" Margin="5 2" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}"/>
             <TextBlock Text="Add favorite" Margin="5 2" VerticalAlignment="Center" />
         </StackPanel>

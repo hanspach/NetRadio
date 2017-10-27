@@ -145,10 +145,13 @@ namespace NetRadio.ViewModels
                     MatchCollection mc = GetWebServiceData(url, "data-small-thumbnail=\"(?<id>.+?)\"");
                     foreach (Match m in mc)
                     {
-                        string smallurl = "http:" + m.Groups["id"].Value;
-                        if (Uri.IsWellFormedUriString(smallurl, UriKind.Absolute))
+                        if (!string.IsNullOrEmpty(m.Groups["id"].Value))
                         {
-                            return smallurl;
+                            string smallurl = "http:" + m.Groups["id"].Value;
+                            if (Uri.IsWellFormedUriString(smallurl, UriKind.Absolute))
+                            {
+                                return smallurl;
+                            }
                         }
                     }
                 }

@@ -5,6 +5,18 @@ using System.Reflection;
 
 namespace NetRadio.ViewModels
 {
+    class FavoriteItem
+    {
+        public string Name { get; set; }
+        public string Url { get; set; }
+
+        public FavoriteItem(string name="", string url ="")
+        {
+            Name = name;
+            Url = url;
+        }
+    }
+
     static class Settings
     {
         public readonly static string ResourcePath = Path.GetDirectoryName(
@@ -20,17 +32,19 @@ namespace NetRadio.ViewModels
 
         public static string LastVisitedUrl { get; set; }
         public static string Volume { get; set; }
-        public static string Favorite1 { get; set; }
-        public static string Favorite2 { get; set; }
-        public static string Favorite3 { get; set; }
+        public static FavoriteItem Favorite1 { get; set; }
+        public static FavoriteItem Favorite2 { get; set; }
+        public static FavoriteItem Favorite3 { get; set; }
 
         static Settings()
         {
+            string[] tokens;
+
             if (File.Exists(settingsPath))
             {
                 foreach (string line in File.ReadAllLines(settingsPath))
                 {
-                    string[] tokens = line.Split('=');
+                    tokens = line.Split('=');
                     if (tokens.Length > 1)
                     {
                         properties.Add(tokens[0].TrimEnd(), tokens[1].TrimStart());
@@ -40,12 +54,43 @@ namespace NetRadio.ViewModels
                     LastVisitedUrl = properties["LastVisitedUrl"];
                 if (properties.ContainsKey("Volume"))
                     Volume = properties["Volume"];
+
+                Favorite1 = new FavoriteItem();
+                Favorite2 = new FavoriteItem();
+                Favorite3 = new FavoriteItem();
                 if (properties.ContainsKey("Favorite1"))
-                    Favorite1 = properties["Favorite1"];
+                {
+                    tokens = properties["Favorite1"].Split(';');
+                    if (tokens.Length > 1)
+                    {
+                        Favorite1.Name = tokens[0];
+                        Favorite1.Url = tokens[1];
+                    }
+                    else
+                        Favorite1.Url = properties["Favorite1"];
+                }
                 if (properties.ContainsKey("Favorite2"))
-                    Favorite2 = properties["Favorite2"];
+                {
+                    tokens = properties["Favorite2"].Split(';');
+                    if (tokens.Length > 1)
+                    {
+                        Favorite2.Name = tokens[0];
+                        Favorite2.Url = tokens[1];
+                    }
+                    else
+                        Favorite2.Url = properties["Favorite2"];
+                }
                 if (properties.ContainsKey("Favorite3"))
-                    Favorite3 = properties["Favorite3"];
+                {
+                    tokens = properties["Favorite3"].Split(';');
+                    if (tokens.Length > 1)
+                    {
+                        Favorite3.Name = tokens[0];
+                        Favorite3.Url = tokens[1];
+                    }
+                    else
+                        Favorite3.Url = properties["Favorite3"];
+                }
             }
         }
 
@@ -57,12 +102,12 @@ namespace NetRadio.ViewModels
                     sw.WriteLine(string.Format("LastVisitedUrl={0}", LastVisitedUrl));
                 if (!string.IsNullOrEmpty(Volume))
                     sw.WriteLine(string.Format("Volume={0}", Volume));
-                if (!string.IsNullOrEmpty(Favorite1))
-                    sw.WriteLine(string.Format("Favorite1={0}", Favorite1));
-                if (!string.IsNullOrEmpty(Favorite2))
-                    sw.WriteLine(string.Format("Favorite2={0}", Favorite2));
-                if (!string.IsNullOrEmpty(Favorite3))
-                    sw.WriteLine(string.Format("Favorite3={0}", Favorite3));
+                if (Favorite1 != null)
+                    sw.WriteLine(string.Format("Favorite1={0};{1}", Favorite1.Name,Favorite1.Url));
+                if (Favorite2 != null)
+                    sw.WriteLine(string.Format("Favorite2={0};{1}", Favorite2.Name,Favorite2.Url));
+                if (Favorite3 != null)
+                    sw.WriteLine(string.Format("Favorite3={0};{1}", Favorite3.Name,Favorite3.Url));
             }
         }
     }

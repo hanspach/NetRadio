@@ -2,7 +2,6 @@
 using System.Windows.Input;
 using GongSolutions.Wpf.DragDrop;
 using System;
-using System.Collections.ObjectModel;
 
 namespace NetRadio.ViewModels
 {
@@ -69,6 +68,25 @@ namespace NetRadio.ViewModels
                 WebRadioControl.Instance.SetVolume(volume / 100);
             }
         }
+
+        private string favorite1Name;
+        public string Favorite1Name
+        {
+            get { return favorite1Name; }
+            set { SetProperty<string>(ref favorite1Name, value); }
+        }
+        private string favorite2Name;
+        public string Favorite2Name
+        {
+            get { return favorite2Name; }
+            set { SetProperty<string>(ref favorite2Name, value); }
+        }
+        private string favorite3Name;
+        public string Favorite3Name
+        {
+            get { return favorite3Name; }
+            set { SetProperty<string>(ref favorite3Name, value); }
+        }
         
         public bool IsAddFavorite { get; set; }
         
@@ -99,13 +117,20 @@ namespace NetRadio.ViewModels
             else
                 Volume = float.Parse(Settings.Volume);
 
-            Favorite1Command = new ActionCommand((o) => { Settings.Favorite1 = Favorite(Settings.Favorite1);}, (o) =>  { return IsFavorite(Settings.Favorite1); });
-            Favorite2Command = new ActionCommand((o) => { Settings.Favorite2 = Favorite(Settings.Favorite2); }, (o) => { return IsFavorite(Settings.Favorite2); });
-            Favorite3Command = new ActionCommand((o) => { Settings.Favorite3 = Favorite(Settings.Favorite3); }, (o) => { return IsFavorite(Settings.Favorite3);});
+            Favorite1Command = new ActionCommand((o) => { Favorite(Settings.Favorite1);}, (o) =>  { return IsFavorite(Settings.Favorite1); });
+            Favorite2Command = new ActionCommand((o) => { Favorite(Settings.Favorite2); }, (o) => { return IsFavorite(Settings.Favorite2); });
+            Favorite3Command = new ActionCommand((o) => { Favorite(Settings.Favorite3); }, (o) => { return IsFavorite(Settings.Favorite3);});
             AddFavoriteCommand = new ActionCommand((o) => {
                 IsAddFavorite = true;
                 FavoriteButtonIconPath = Settings.ResourcePath + "Redmark.png";
             }, (o) => { return EditViewModel.CurrentItem != null; });
+
+            if (!string.IsNullOrEmpty(Settings.Favorite1.Name))
+                favorite1Name = Settings.Favorite1.Name;
+            if (!string.IsNullOrEmpty(Settings.Favorite2.Name))
+                favorite2Name = Settings.Favorite2.Name;
+            if (!string.IsNullOrEmpty(Settings.Favorite3.Name))
+                favorite3Name = Settings.Favorite3.Name;
         }
         
         public void DragOver(IDropInfo info)
@@ -182,17 +207,24 @@ namespace NetRadio.ViewModels
 
         private void Play(object o)
         {
-            if (!HasPlayed)
+            try
             {
-                WebRadioControl.Instance.OpenRadioProgram(EditViewModel.CurrentItem.Url);
-                PlayButtonIconPath = Settings.ResourcePath + "pause.png";
+                if (!HasPlayed)
+                {
+                    WebRadioControl.Instance.OpenRadioProgram(EditViewModel.CurrentItem.Url);
+                    PlayButtonIconPath = Settings.ResourcePath + "pause.png";
+                }
+                else
+                {
+                    WebRadioControl.Instance.Pause();
+                    PlayButtonIconPath = Settings.ResourcePath + "play.png";
+                }
+                HasPlayed = !HasPlayed;
             }
-            else
+            catch(Exception e)
             {
-                WebRadioControl.Instance.Pause();
-                PlayButtonIconPath = Settings.ResourcePath + "play.png";
+                log.ErrorFormat("{0}\n{1}", e.Message, e.StackTrace);
             }
-            HasPlayed = !HasPlayed;
         }
 
         private bool CanPlay(object o)
@@ -211,23 +243,22 @@ namespace NetRadio.ViewModels
             isSilence = !isSilence;
         }
 
-        private string Favorite(string member)
+        private void Favorite(FavoriteItem item)
         {
-            string url = member;
             if (IsAddFavorite)
             {
-                url = EditViewModel.CurrentItem.Url;
+                item.Url = EditViewModel.CurrentItem.Url;
+                item.Name = EditViewModel.CurrentItem.Name;
                 FavoriteButtonIconPath = Settings.ResourcePath + "white.png";
                 IsAddFavorite = false;
             }
-            if (FindTreeNode(url))
+            if (FindTreeNode(item.Url))
                 Play(null);
-            return url;
         }
 
-        private bool IsFavorite(string member)
+        private bool IsFavorite(FavoriteItem item)
         {
-            return !string.IsNullOrEmpty(member)
+            return !string.IsNullOrEmpty(item.Url)
                && !IsAddFavorite || EditViewModel.CurrentItem != null && IsAddFavorite;
         }
     }
