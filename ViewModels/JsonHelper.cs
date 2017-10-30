@@ -2,6 +2,9 @@
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using log4net;
+using System;
+using System.Collections.Generic;
 
 namespace NetRadio.ViewModels
 {
@@ -45,21 +48,82 @@ namespace NetRadio.ViewModels
         }
     }
 
+    class State
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("country_code")]
+        public string CountryCode { get; set; }
+
+        [JsonProperty("region")]
+        public string Continent { get; set; }
+    }
+
     static class JsonHelper
     {
-        public static ObservableCollection<ProgramProps> ReadJson()
+        static ILog log = LogManager.GetLogger(System.Reflection.MethodBase.
+            GetCurrentMethod().DeclaringType);
+
+        public static ObservableCollection<State> GetCountries()
         {
-            using (StreamReader r = new StreamReader(
-                Path.GetDirectoryName(
-                    Assembly.GetExecutingAssembly().Location) + @"\Resources\data.json"))
+            ObservableCollection<State> res = null;
+            string json = ReadJsonFile("countries.json");
+            if (!string.IsNullOrEmpty(json))
             {
-                string json = r.ReadToEnd();
-                ObservableCollection <ProgramProps> res = JsonConvert.DeserializeObject<ObservableCollection<ProgramProps>>(json);
+                res = JsonConvert.DeserializeObject<ObservableCollection<State>>(json);
+            }
+            return res == null ? new ObservableCollection<State>() : res;
+        }
+
+        public static Dictionary<string,string> GetVisitedCountries()
+        {
+            var res = new Dictionary<string, string>();
+            var countries = GetCountries();
+            foreach(ProgramProps p in GetStations())
+            {
+                if (!res.ContainsKey(p.Country))
+                {
+                    foreach(State state in countries)
+                    {
+                        if(p.Country == state.CountryCode)
+                        {
+                            res.Add(p.Country, state.Name);
+                            break;
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+        public static ObservableCollection<ProgramProps> GetStations()
+        {
+            ObservableCollection<ProgramProps> res = null;
+            string json = ReadJsonFile("data.json");
+            if(!string.IsNullOrEmpty(json))
+            { 
+                res = JsonConvert.DeserializeObject<ObservableCollection<ProgramProps>>(json);
                 foreach(ProgramProps pp in res)         
                 {
                     pp.CurrentStream = pp.Streams[0];
                 }
-                return res;
+            }
+            return res == null ? new ObservableCollection<ProgramProps>() : res;
+        }
+
+        static string ReadJsonFile(string filename)
+        {
+            try
+            {
+                using (StreamReader r = new StreamReader(Settings.ResourcePath + filename))
+                {
+                    return r.ReadToEnd();
+                }
+            }
+            catch (Exception e)
+            {
+                log.ErrorFormat("{0}\n{1}", e.Message, e.StackTrace);
+                return null;
             }
         }
     }

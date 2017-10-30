@@ -145,7 +145,7 @@ namespace NetRadio.ViewModels
             {
                 ImagePathes.Add(new ImageItem { ImagePath = fi.FullName });
             }
-            JsonProgramList = JsonHelper.ReadJson();
+            JsonProgramList = JsonHelper.GetStations();
             NewEntryCommand = new ActionCommand(s => { NewItem(s); }, s => { return CurrentItem != null; });
             AddEntryCommand = new ActionCommand(s => { AddItem(s); }, s => { return isNewEntryPerformed; });
             DeleteEntryCommand = new ActionCommand(s => { DeleteItem(s); }, s => {return CurrentItem != null; });

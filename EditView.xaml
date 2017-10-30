@@ -62,7 +62,7 @@
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <DataGrid x:Name="grid" Margin="0" ItemsSource="{Binding JsonProgramList}" SelectedItem="{Binding CurrentProgramProps}" AutoGenerateColumns="False"
-                 CanUserAddRows="False" IsReadOnly="True" dd:DragDrop.IsDragSource="True" >
+                 CanUserAddRows="False" IsReadOnly="True" dd:DragDrop.IsDragSource="True" EnableRowVirtualization="True" >
                 <DataGrid.Resources>
                     <DataTemplate x:Key="streamie" DataType="viewmodels:ProgramProps" >
                         <ComboBox SelectedItem="{Binding CurrentStream, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Streams}">
