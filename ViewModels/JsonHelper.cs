@@ -226,7 +226,7 @@ namespace NetRadio.ViewModels
             if (q != null)
             {
                 if (q.Count() > 1)
-                    states.Add("All Countries");
+                    states.Add("All countries");
                 foreach (var g in q)
                 {
                     states.Add(States.Find(i => i.CountryCode == g.Key).Name);
@@ -238,6 +238,8 @@ namespace NetRadio.ViewModels
         public static List<string> GetExistingCategories(string filename)
         {
             var cats = new Dictionary<string, string>();
+            var res = new List<string>();
+            res.Add("All categories");
             foreach (var p in GetEntries<ProgramProps>(filename))
             {
                 foreach (Category c in p.Categories)
@@ -246,7 +248,8 @@ namespace NetRadio.ViewModels
                         cats.Add(c.Id, c.Title);
                 }
             }
-            return cats.Values.ToList();
+            res.AddRange(cats.Values.ToList());
+            return res;
         }
 
         static void AddStations(string key, string country = "", string category = "", string preurl = "http://api.dirble.com/v2/", string filename = "data.json")

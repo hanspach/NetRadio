@@ -43,8 +43,8 @@ namespace NetRadio
                 }
                 model.EditViewModel.ResetProperties();
                 model.Message = new ViewModels.MessageModel(string.Empty); // ????
-                model.PlayButtonIconPath = ViewModels.Settings.ResourcePath + "play.png";
-                model.HasPlayed = false;
+               // model.PlayButtonIconPath = ViewModels.Settings.ResourcePath + "play.png"; //???? musi is playing on
+               // model.HasPlayed = false;
                 if (item is ViewModels.Program)
                     model.BrowserViewModel.Url = item.Parent.Url;
                 else

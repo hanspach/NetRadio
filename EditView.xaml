@@ -60,25 +60,35 @@
                 <Button Content="pack://application:,,,/Resources/Erase.png"  Command="{Binding DeleteEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Delete entry" />
             </StackPanel>
         </StackPanel>
-        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <DataGrid x:Name="grid" Margin="0" ItemsSource="{Binding JsonProgramList}" SelectedItem="{Binding CurrentProgramProps}" AutoGenerateColumns="False"
+        <DockPanel>
+            <Grid DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0" ItemsSource="{Binding Countries}" SelectedItem="{Binding SelectedCountry}" Margin="5"/>
+                <ComboBox Grid.Column="1"  ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" Margin="5"/>
+            </Grid>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <DataGrid x:Name="grid" Margin="0" ItemsSource="{Binding JsonProgramList}" SelectedItem="{Binding CurrentProgramProps}" AutoGenerateColumns="False"
                  CanUserAddRows="False" IsReadOnly="True" dd:DragDrop.IsDragSource="True" EnableRowVirtualization="True" >
-                <DataGrid.Resources>
-                    <DataTemplate x:Key="streamie" DataType="viewmodels:ProgramProps" >
-                        <ComboBox SelectedItem="{Binding CurrentStream, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Streams}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Url}" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </DataTemplate>
-                </DataGrid.Resources>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Programm" Binding="{Binding Name}" Width="100" />
-                    <DataGridTemplateColumn Header="URLs" CellTemplate="{StaticResource streamie}" CellEditingTemplate="{StaticResource streamie}" Width="250" />
-                </DataGrid.Columns>
-            </DataGrid>
-        </ScrollViewer>
+                    <DataGrid.Resources>
+                        <DataTemplate x:Key="streamie" DataType="viewmodels:ProgramProps" >
+                            <ComboBox SelectedItem="{Binding CurrentStream, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Streams}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Url}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Programm" Binding="{Binding Name}" Width="100" />
+                        <DataGridTemplateColumn Header="URLs" CellTemplate="{StaticResource streamie}" CellEditingTemplate="{StaticResource streamie}" Width="250" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </ScrollViewer>
+        </DockPanel>
     </DockPanel>
 </UserControl>

@@ -3,14 +3,42 @@ using System.IO;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using GongSolutions.Wpf.DragDrop;
+using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace NetRadio.ViewModels
 {
-    class EditViewModel : ViewModelBase, IDropTarget
+    class StationArgs
+    {
+        public string Filename { get; private set; }
+        public string Country { get; private set; }
+        public string Category { get; private set; }
+
+        public StationArgs(string filename, string country, string category)
+        {
+            if (country == "All countries")
+                Country = string.Empty;
+            else
+                Country = country;
+            if (category == "All categories")
+                Category = string.Empty;
+            else
+                Category = category;
+        }
+
+        public StationArgs(string filename) : this(filename, "", "")
+        {
+        }
+    }
+
+    class EditViewModel : ViewModelBase, IDropTarget, IDisposable
     {
         private MainWindowViewModel mainViewModel;
         private bool isNewEntryPerformed;
         private bool isAddEntryPerformed;
+        private BackgroundWorker worker = new BackgroundWorker();
+        private BackgroundWorker countryworker = new BackgroundWorker();
+        private BackgroundWorker categoryworker = new BackgroundWorker();
 
         public ObservableCollection<ImageItem> ImagePathes { get; private set; }
         
@@ -21,7 +49,16 @@ namespace NetRadio.ViewModels
         private ObservableCollection<ProgramProps> jsonProgramList;
         public ObservableCollection<ProgramProps> JsonProgramList
         {
-            get { return jsonProgramList; }
+            get
+            {
+                if (jsonProgramList == null)
+                {
+                    if(!worker.IsBusy)
+                        worker.RunWorkerAsync(new StationArgs("data.json"));
+                    
+                }
+                return jsonProgramList;
+            }
             set { SetProperty<ObservableCollection<ProgramProps>>(ref jsonProgramList, value); }
         }
 
@@ -47,7 +84,7 @@ namespace NetRadio.ViewModels
             get { return currentProgramProps; }
             set {
                 SetProperty<ProgramProps>(ref currentProgramProps, value);
-                CurrentItem = new Program(currentProgramProps.Name,currentProgramProps.CurrentStream.Url,"");  // ????????
+                //CurrentItem = new Program(currentProgramProps.Name,currentProgramProps.CurrentStream.Url,"");  // ????????
             }
         }
 
@@ -143,7 +180,98 @@ namespace NetRadio.ViewModels
                 }
             }
         }
-       
+
+        private ObservableCollection<string> countries;
+        public ObservableCollection<string> Countries
+        {
+            get {
+                if(countries == null)
+                {
+                    countryworker.DoWork += new DoWorkEventHandler(delegate (object sender, DoWorkEventArgs args)
+                    {
+                        string filename = args.Argument as string;
+                        args.Result = JsonHelper.GetExistingStates(filename);
+                    });
+                    
+                    countryworker.RunWorkerAsync("data.json");
+                    countryworker.RunWorkerCompleted += ((s, args) => { Countries = new 
+                        ObservableCollection<string>(args.Result as List<string>);
+                    });
+                }
+                return countries; }
+            set {
+                countries = value;
+                OnPropertyChanged("Countries");
+                if (countryworker != null)
+                {
+                    countryworker.Dispose();
+                    countryworker = null;
+                    SelectedCountry = countries[0];
+                }
+            }
+        }
+        private string selectedCountry;
+        public string SelectedCountry
+        {
+            get { return selectedCountry; }
+            set
+            {
+                if (selectedCountry != value)
+                {
+                    SetProperty<string>(ref selectedCountry, value);
+                    if (!worker.IsBusy)
+                        worker.RunWorkerAsync(new StationArgs("data.json", SelectedCountry, SelectedCategory));
+                }
+            }
+        }
+
+        private ObservableCollection<string> categories;
+        public ObservableCollection<string> Categories
+        {
+            get
+            {
+                if(categories == null)
+                {
+                    categoryworker.DoWork += new DoWorkEventHandler(delegate (object sender, DoWorkEventArgs args)
+                    {
+                        string filename = args.Argument as string;
+                        args.Result = JsonHelper.GetExistingCategories(filename);
+                    });
+
+                    categoryworker.RunWorkerAsync("data.json");
+                    categoryworker.RunWorkerCompleted += ((s, args) => {
+                        Categories = new ObservableCollection<string>(args.Result as List<string>);
+                    });
+                }
+                return categories;
+            }
+            set
+            {
+                categories = value;
+                OnPropertyChanged("Categories");
+                if (categoryworker != null)
+                {
+                    categoryworker.Dispose();
+                    categoryworker = null;
+                    SelectedCategory = categories[0];
+                }
+            }
+        }
+        private string selectedCategory;
+        public string SelectedCategory
+        {
+            get { return selectedCategory; }
+            set
+            { 
+                if(selectedCountry != value)
+                {
+                    SetProperty<string>(ref selectedCategory, value);
+                    if (!worker.IsBusy)
+                        worker.RunWorkerAsync(new StationArgs("data.json", SelectedCountry, SelectedCategory));
+                }
+            }
+        }
+
         public EditViewModel(MainWindowViewModel mvm) : base()
         {
             mainViewModel = mvm;
@@ -154,10 +282,19 @@ namespace NetRadio.ViewModels
             {
                 ImagePathes.Add(new ImageItem { ImagePath = fi.FullName });
             }
-            JsonProgramList = new ObservableCollection<ProgramProps>(JsonHelper.GetDownloadedStations("data.json"));
             NewEntryCommand = new ActionCommand(s => { NewItem(s); }, s => { return CurrentItem != null; });
             AddEntryCommand = new ActionCommand(s => { AddItem(s); }, s => { return isNewEntryPerformed; });
             DeleteEntryCommand = new ActionCommand(s => { DeleteItem(s); }, s => {return CurrentItem != null; });
+            worker.DoWork += new DoWorkEventHandler(delegate (object sender, DoWorkEventArgs args)
+            {
+                var a = args.Argument as StationArgs;
+                args.Result = JsonHelper.GetDownloadedStations("data.json",a.Country,a.Category);
+            });
+            worker.RunWorkerCompleted += ((s, args) =>
+            {
+                JsonProgramList = new
+                    ObservableCollection<ProgramProps>(args.Result as List<ProgramProps>);
+            });
             ResetProperties();
         }
 
@@ -342,5 +479,7 @@ namespace NetRadio.ViewModels
             }
             Settings.IsDirty = true;
         }
+
+        public void Dispose() => worker.Dispose();
     }
 }
