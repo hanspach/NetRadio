@@ -13,11 +13,17 @@ namespace NetRadio.ViewModels
         private bool isAddEntryPerformed;
 
         public ObservableCollection<ImageItem> ImagePathes { get; private set; }
-        public ObservableCollection<ProgramProps> JsonProgramList { get; private set; }
         
         public ICommand NewEntryCommand { get; private set; }
         public ICommand AddEntryCommand { get; private set; }
         public ICommand DeleteEntryCommand { get; private set; }
+
+        private ObservableCollection<ProgramProps> jsonProgramList;
+        public ObservableCollection<ProgramProps> JsonProgramList
+        {
+            get { return jsonProgramList; }
+            set { SetProperty<ObservableCollection<ProgramProps>>(ref jsonProgramList, value); }
+        }
 
         private Item currentItem;
         public Item CurrentItem
@@ -38,8 +44,11 @@ namespace NetRadio.ViewModels
 
         private ProgramProps currentProgramProps;
         public ProgramProps CurrentProgramProps {
-            get { return currentProgramProps; } 
-            set {SetProperty<ProgramProps>(ref currentProgramProps, value); }
+            get { return currentProgramProps; }
+            set {
+                SetProperty<ProgramProps>(ref currentProgramProps, value);
+                CurrentItem = new Program(currentProgramProps.Name,currentProgramProps.CurrentStream.Url,"");  // ????????
+            }
         }
 
         private ImageItem currentImage;
@@ -145,7 +154,7 @@ namespace NetRadio.ViewModels
             {
                 ImagePathes.Add(new ImageItem { ImagePath = fi.FullName });
             }
-            JsonProgramList = JsonHelper.GetStations();
+            JsonProgramList = new ObservableCollection<ProgramProps>(JsonHelper.GetDownloadedStations("data.json"));
             NewEntryCommand = new ActionCommand(s => { NewItem(s); }, s => { return CurrentItem != null; });
             AddEntryCommand = new ActionCommand(s => { AddItem(s); }, s => { return isNewEntryPerformed; });
             DeleteEntryCommand = new ActionCommand(s => { DeleteItem(s); }, s => {return CurrentItem != null; });

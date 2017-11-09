@@ -14,5 +14,6 @@
             <Button Content="Go" Margin="2" />
             <TextBox Width="200" Text="{Binding Url}"/>
         </StatusBar>
+        <ContentControl Content="{Binding Browser}" />
     </DockPanel>
 </UserControl>
