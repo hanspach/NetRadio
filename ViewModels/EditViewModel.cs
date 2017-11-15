@@ -83,8 +83,12 @@ namespace NetRadio.ViewModels
         public ProgramProps CurrentProgramProps {
             get { return currentProgramProps; }
             set {
-                SetProperty<ProgramProps>(ref currentProgramProps, value);
-                //CurrentItem = new Program(currentProgramProps.Name,currentProgramProps.CurrentStream.Url,"");  // ????????
+                if (value != null && currentProgramProps != value)
+                {
+                    SetProperty<ProgramProps>(ref currentProgramProps, value);
+                    CurrentItem.IsSelected = false;
+                    CurrentItem = new Program(currentProgramProps.Name,currentProgramProps.CurrentStream.Url,"");  // ?
+                }
             }
         }
 

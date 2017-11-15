@@ -20,7 +20,7 @@
         <!--  Hintergrund TreeView-->
         <LinearGradientBrush x:Key="TreeViewBackground" StartPoint="0,0" EndPoint="0,1">
             <GradientStop Offset="0" Color="LightGray"/>
-            <GradientStop Offset="0.5" Color="LightGray"/>
+            <GradientStop Offset="0.7" Color="LightGray"/>
             <GradientStop Offset="1" Color="AntiqueWhite"/>
         </LinearGradientBrush>
 
@@ -105,11 +105,6 @@
         <DataTemplate DataType="{x:Type viewmodels:VisualViewModel}">
             <local:VisualView />
         </DataTemplate>
-        <Style x:Key="btnStyle" TargetType="{x:Type Button}">
-            <Setter Property="Margin" Value="1" />
-            <Setter Property="Width" Value="18" />
-            <Setter Property="Height" Value="18" />
-        </Style>
     </Window.Resources>
 
     <DockPanel Background="{StaticResource MainBackground}">
@@ -129,22 +124,22 @@
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="btnVisual" Content="pack://application:,,,/Resources/NewDoc.png" Background="Gray" Command="{Binding VisualViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="VisualView" />
-                    <Button x:Name="btnEdit" Content="pack://application:,,,/Resources/Modify.png" Background="Gray" Command="{Binding EditViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="EditView"/>
-                    <Button x:Name="btnBrowser" Content="pack://application:,,,/Resources/Home.png" Background="Gray" Command="{Binding BrowserViewCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="BrowserView" />
+                    <Button x:Name="btnVisual" Content="pack://application:,,,/Resources/NewDoc.png" Background="Gray" Command="{Binding VisualViewCommand}" Template="{StaticResource ImageButton}"  ToolTip="VisualView" />
+                    <Button x:Name="btnEdit" Content="pack://application:,,,/Resources/Modify.png" Background="Gray" Command="{Binding EditViewCommand}" Template="{StaticResource ImageButton}"  ToolTip="EditView"/>
+                    <Button x:Name="btnBrowser" Content="pack://application:,,,/Resources/Home.png" Background="Gray" Command="{Binding BrowserViewCommand}" Template="{StaticResource ImageButton}"  ToolTip="BrowserView" />
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
         <StackPanel Margin="20,5"  Orientation="Horizontal" DockPanel.Dock="Bottom">
-            <Button Content="{Binding PlayButtonIconPath}" Command="{Binding PlayProgramCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Play" />
-            <Button Content="pack://application:,,,/Resources/volume.png" Template="{StaticResource ImageButton}" Command="{Binding MuteCommand}"  Style="{StaticResource btnStyle}" ToolTip="Volume" />
+            <Button Content="{Binding PlayButtonIconPath}" Command="{Binding PlayProgramCommand}" Template="{StaticResource ImageButton}"  ToolTip="Play" />
+            <Button Content="pack://application:,,,/Resources/volume.png" Template="{StaticResource ImageButton}" Command="{Binding MuteCommand}" ToolTip="Volume" />
             <Slider x:Name="slider" VerticalAlignment="Center" TickPlacement="None" Value="{Binding Volume}" Style="{StaticResource Horizontal_Slider}"
                 IsSnapToTickEnabled="True" IsSelectionRangeEnabled="True" Minimum="0" Maximum="100" Margin="5 0" />
             <TextBlock Text="Favorites" Margin="5 2" VerticalAlignment="Center" />
-            <Button Content="pack://application:,,,/Resources/one.png" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" Command="{Binding Favorite1Command}" ToolTip="{Binding Favorite1Name}"/>
-            <Button Content="pack://application:,,,/Resources/two.png" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" Command="{Binding Favorite2Command}" ToolTip="{Binding Favorite2Name}"/>
-            <Button Content="pack://application:,,,/Resources/three.png"  Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" Command="{Binding Favorite3Command}" ToolTip="{Binding Favorite3Name}"/>
-            <Button Content="{Binding FavoriteButtonIconPath}" Command="{Binding AddFavoriteCommand}" Background="White" Margin="5 2" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}"/>
+            <Button Content="pack://application:,,,/Resources/one.png" Template="{StaticResource ImageButton}" Command="{Binding Favorite1Command}" ToolTip="{Binding Favorite1Name}"/>
+            <Button Content="pack://application:,,,/Resources/two.png" Template="{StaticResource ImageButton}" Command="{Binding Favorite2Command}" ToolTip="{Binding Favorite2Name}"/>
+            <Button Content="pack://application:,,,/Resources/three.png"  Template="{StaticResource ImageButton}" Command="{Binding Favorite3Command}" ToolTip="{Binding Favorite3Name}"/>
+            <Button Content="{Binding FavoriteButtonIconPath}" Command="{Binding AddFavoriteCommand}" Background="White" Margin="5 2" Template="{StaticResource ImageButton}" />
             <TextBlock Text="Add favorite" Margin="5 2" VerticalAlignment="Center" />
         </StackPanel>
         <Grid x:Name="grid"  Margin="0,1,0,-1">

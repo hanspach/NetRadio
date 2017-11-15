@@ -9,15 +9,46 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type viewmodels:EditViewModel}" />
-        <Style x:Key="btnStyle" TargetType="{x:Type Button}">
-            <Setter Property="Margin" Value="1" />
-            <Setter Property="Width" Value="18" />
-            <Setter Property="Height" Value="18" />
-        </Style>
         <Style x:Key="tbstyle" TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="AntiqueWhite" />
         </Style>
+        
+        <Style x:Key="placeHolder" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <TextBox Text="{Binding Path=Text,
+                                                RelativeSource={RelativeSource TemplatedParent}, 
+                                                Mode=TwoWay,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                 x:Name="textSource" 
+                                 Background="Transparent" 
+                                 Panel.ZIndex="2" />
+                            <TextBox Text="{TemplateBinding Tag}" Background="{TemplateBinding Background}" Panel.ZIndex="1">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Setter Property="Foreground" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=Text, Source={x:Reference textSource}}" Value="">
+                                                <Setter Property="Foreground" Value="Gray"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <LinearGradientBrush x:Key="DataGridBackground" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Offset="0" Color="LightGray"/>
+            <GradientStop Offset="0.7" Color="LightGray"/>
+            <GradientStop Offset="1" Color="AntiqueWhite"/>
+        </LinearGradientBrush>
     </UserControl.Resources>
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom" Margin="5">
@@ -55,9 +86,9 @@
                         </ResourceDictionary.MergedDictionaries>
                     </ResourceDictionary>
                 </StackPanel.Resources>
-                <Button Content="pack://application:,,,/Resources/NewDoc.png" Command="{Binding NewEntryCommand}"  Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="New entry"/>
-                <Button Content="pack://application:,,,/Resources/Database.png" Command="{Binding AddEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Transfer data"/>
-                <Button Content="pack://application:,,,/Resources/Erase.png"  Command="{Binding DeleteEntryCommand}" Template="{StaticResource ImageButton}" Style="{StaticResource btnStyle}" ToolTip="Delete entry" />
+                <Button Content="pack://application:,,,/Resources/NewDoc.png" Command="{Binding NewEntryCommand}"  Template="{StaticResource ImageButton}" ToolTip="New entry"/>
+                <Button Content="pack://application:,,,/Resources/Database.png" Command="{Binding AddEntryCommand}" Template="{StaticResource ImageButton}" ToolTip="Transfer data"/>
+                <Button Content="pack://application:,,,/Resources/Erase.png"  Command="{Binding DeleteEntryCommand}" Template="{StaticResource ImageButton}" ToolTip="Delete entry" />
             </StackPanel>
         </StackPanel>
         <DockPanel>
@@ -65,13 +96,25 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <ComboBox Grid.Column="0" ItemsSource="{Binding Countries}" SelectedItem="{Binding SelectedCountry}" Margin="5"/>
-                <ComboBox Grid.Column="1"  ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" Margin="5"/>
+                <TextBox Grid.Column="1" Style="{StaticResource placeHolder}" Tag="Stations" Margin="5" />
+                <ComboBox Grid.Column="2"  ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" Margin="5"/>
             </Grid>
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <DataGrid x:Name="grid" Margin="0" ItemsSource="{Binding JsonProgramList}" SelectedItem="{Binding CurrentProgramProps}" AutoGenerateColumns="False"
-                 CanUserAddRows="False" IsReadOnly="True" dd:DragDrop.IsDragSource="True" EnableRowVirtualization="True" >
+                 CanUserAddRows="False" IsReadOnly="True" dd:DragDrop.IsDragSource="True" EnableRowVirtualization="True" 
+                 Background="{StaticResource DataGridBackground}" SelectionMode="Single" DataGrid.SelectionUnit="FullRow">
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="LightBlue" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
                     <DataGrid.Resources>
                         <DataTemplate x:Key="streamie" DataType="viewmodels:ProgramProps" >
                             <ComboBox SelectedItem="{Binding CurrentStream, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Streams}">

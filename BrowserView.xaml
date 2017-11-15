@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NetRadio"
              xmlns:viewmodels="clr-namespace:NetRadio.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -10,10 +11,18 @@
         <DataTemplate DataType="{x:Type viewmodels:BrowserViewModel}" />
     </UserControl.Resources>
     <DockPanel>
-        <StatusBar DockPanel.Dock="Top">
-            <Button Content="Go" Margin="2" />
-            <TextBox Width="200" Text="{Binding Url}"/>
-        </StatusBar>
-        <ContentControl Content="{Binding Browser}" />
+        <DockPanel.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="ImageButton.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </DockPanel.Resources>
+        <DockPanel DockPanel.Dock="Top">
+            <Button DockPanel.Dock="Left" Content="pack://application:,,,/Resources/Back.png" Template="{StaticResource ImageButton}" Click="RedoClicked" IsEnabled="{Binding ElementName=browser, Path=CanGoBack}" ToolTip="Redo" />
+            <Button DockPanel.Dock="Left" Content="pack://application:,,,/Resources/Undo.png" Template="{StaticResource ImageButton}" Click="RefreshClicked" ToolTip="Refresh" />
+            <TextBox x:Name="txtUrl" Text="{Binding Url}"/>
+        </DockPanel>
+        <WebBrowser x:Name="browser" local:WebBrowserBehavior.BindableSource="{Binding Url}" local:WebBrowserBehavior.DisableJavascriptErrors="True" />
     </DockPanel>
 </UserControl>

@@ -131,6 +131,8 @@ namespace NetRadio.ViewModels
                 favorite2Name = Settings.Favorite2.Name;
             if (!string.IsNullOrEmpty(Settings.Favorite3.Name))
                 favorite3Name = Settings.Favorite3.Name;
+
+            WebBrowserBehavior.FixBrowserVersion();       // Eintrag in registry
         }
         
         public void DragOver(IDropInfo info)
