@@ -88,6 +88,7 @@ namespace NetRadio.ViewModels
                     SetProperty<ProgramProps>(ref currentProgramProps, value);
                     CurrentItem.IsSelected = false;
                     CurrentItem = new Program(currentProgramProps.Name,currentProgramProps.CurrentStream.Url,"");  // ?
+                    mainViewModel.HasPlayed = false;
                 }
             }
         }

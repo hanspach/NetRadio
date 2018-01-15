@@ -58,7 +58,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Style="{StaticResource tbstyle}" Text="Icon:" />
-                <ComboBox Grid.Row="0" Grid.Column="1" Name="cbImages" Margin="5,2"
+                <ComboBox  Grid.Row="0" Grid.Column="1" Name="cbImages" Margin="5,2"
                     HorizontalAlignment="Left" ItemsSource="{Binding ImagePathes}"  Width="60" Height="24"
                     SelectedItem="{Binding CurrentImage}">
                     <ComboBox.ItemTemplate>
@@ -105,7 +105,7 @@
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <DataGrid x:Name="grid" Margin="0" ItemsSource="{Binding JsonProgramList}" SelectedItem="{Binding CurrentProgramProps}" AutoGenerateColumns="False"
                  CanUserAddRows="False" IsReadOnly="True" dd:DragDrop.IsDragSource="True" EnableRowVirtualization="True" 
-                 Background="{StaticResource DataGridBackground}" SelectionMode="Single" DataGrid.SelectionUnit="FullRow">
+                 SelectionMode="Single" DataGrid.SelectionUnit="FullRow">
                     <DataGrid.CellStyle>
                         <Style TargetType="DataGridCell">
                             <Style.Triggers>
@@ -117,17 +117,22 @@
                     </DataGrid.CellStyle>
                     <DataGrid.Resources>
                         <DataTemplate x:Key="streamie" DataType="viewmodels:ProgramProps" >
-                            <ComboBox SelectedItem="{Binding CurrentStream, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Streams}">
+                            <ComboBox SelectedItem="{Binding CurrentStream, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Streams}"  >
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Url}" />
+                                        <TextBlock Text="{Binding Url}" Background="{StaticResource DataGridBackground}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
                         </DataTemplate>
+                        <DataTemplate x:Key="staname" DataType="viewmodels:ProgramProps">
+                            <TextBlock Text="{Binding Name}" Background="{StaticResource DataGridBackground}" />
+                        </DataTemplate>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Programm" Binding="{Binding Name}" Width="100" />
+ <!--                       <DataGridTextColumn Header="Programm" Binding="{Binding Name}" Width="100"   />
+-->
+                        <DataGridTemplateColumn Header="Prgogram" CellTemplate="{StaticResource staname}" CellEditingTemplate="{StaticResource staname}" Width="100" />
                         <DataGridTemplateColumn Header="URLs" CellTemplate="{StaticResource streamie}" CellEditingTemplate="{StaticResource streamie}" Width="250" />
                     </DataGrid.Columns>
                 </DataGrid>

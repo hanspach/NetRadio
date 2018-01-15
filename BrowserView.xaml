@@ -19,7 +19,7 @@
             </ResourceDictionary>
         </DockPanel.Resources>
         <DockPanel DockPanel.Dock="Top">
-            <Button DockPanel.Dock="Left" Content="pack://application:,,,/Resources/Back.png" Template="{StaticResource ImageButton}" Click="RedoClicked" IsEnabled="{Binding ElementName=browser, Path=CanGoBack}" ToolTip="Redo" />
+            <Button DockPanel.Dock="Left" Content="pack://application:,,,/Resources/Back.png" Template="{StaticResource ImageButton}" Click="RedoClicked" ToolTip="Redo" />
             <Button DockPanel.Dock="Left" Content="pack://application:,,,/Resources/Undo.png" Template="{StaticResource ImageButton}" Click="RefreshClicked" ToolTip="Refresh" />
             <TextBox x:Name="txtUrl" Text="{Binding Url}"/>
         </DockPanel>

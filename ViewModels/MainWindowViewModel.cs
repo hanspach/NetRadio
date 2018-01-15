@@ -17,6 +17,7 @@ namespace NetRadio.ViewModels
         public ICommand VisualViewCommand { get; private set; }
         public ICommand PlayProgramCommand { get; private set; }
         public ICommand MuteCommand { get; private set; }
+        public ICommand RecordCommand { get; private set; }
         public ICommand Favorite1Command { get; private set; }
         public ICommand Favorite2Command { get; private set; }
         public ICommand Favorite3Command { get; private set; }
@@ -41,13 +42,28 @@ namespace NetRadio.ViewModels
             set { SetProperty<MessageModel>(ref message, value); }
         }
 
-        public bool HasPlayed { get; set; }
+        private bool hasPlayed;
+        public bool HasPlayed
+        {
+            get { return hasPlayed; }
+            set { SetProperty<bool>(ref hasPlayed, value); }
+        }
 
         private string playButtonIconPath;
         public string PlayButtonIconPath
         {
             get { return playButtonIconPath; }
-            set { SetProperty<string>(ref playButtonIconPath, value); }
+            set {
+                SetProperty<string>(ref playButtonIconPath, value);
+                IsPauseImage = playButtonIconPath.EndsWith("pause.png");
+            }
+        }
+
+        private bool isPauseImage;
+        public bool IsPauseImage
+        {
+            get { return isPauseImage; }
+            set { SetProperty<bool>(ref isPauseImage, value); }
         }
 
         private string favoriteButtonIconPath;
@@ -101,6 +117,7 @@ namespace NetRadio.ViewModels
             BrowserViewCommand = new ActionCommand(delegate { CurrentViewModel = BrowserViewModel; });
             VisualViewCommand = new ActionCommand(delegate { CurrentViewModel = VisualViewModel; });
             PlayProgramCommand = new ActionCommand(Play, CanPlay);
+            RecordCommand = new ActionCommand(Record, CanRecord);
             MuteCommand = new ActionCommand(Silence, (o) => { return true; });
             WebRadioControl.Instance.OnMessageChanged += ((s, args) => {
                 if (args.Message != null)
@@ -236,6 +253,17 @@ namespace NetRadio.ViewModels
             return false;
         }
 
+        private void Record(object o)
+        {
+            log.ErrorFormat("Record-Button pressed");
+            WebRadioControl.Instance.RecordProgram();
+        }
+
+        private bool CanRecord(object o)
+        {
+            return true; // WebRadioControl.Instance.IsPlaying; 
+        }
+
         private void Silence(object o)
         {
             if (isSilence)
@@ -255,7 +283,10 @@ namespace NetRadio.ViewModels
                 IsAddFavorite = false;
             }
             if (FindTreeNode(item.Url))
+            {
+                HasPlayed = false;
                 Play(null);
+            }
         }
 
         private bool IsFavorite(FavoriteItem item)

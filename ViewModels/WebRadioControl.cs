@@ -1,4 +1,5 @@
 ﻿using System;
+using log4net;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -7,9 +8,9 @@ using ManagedBass;
 using System.Collections.Generic;
 using System.Windows.Interop;
 using WPFSoundVisualizationLib;
+using System.IO;
+using Microsoft.Win32;
 using System.ComponentModel;
-using System.Text.RegularExpressions;
-using System.Text;
 
 namespace NetRadio.ViewModels
 {
@@ -35,15 +36,21 @@ namespace NetRadio.ViewModels
 
     sealed class WebRadioControl : ViewModelBase,ISpectrumPlayer, IDisposable
     {
-        #region Fields
+        static ILog log = LogManager.GetLogger(System.Reflection.MethodBase.
+            GetCurrentMethod().DeclaringType);
+
         static readonly object Lock = new object();
         static WebRadioControl control;
 
+        BackgroundWorker worker = new BackgroundWorker();
         readonly Timer timer;
         int req;                                             // request number/counter
         int chan;                                            // stream handle
-        #endregion
-
+        string title;
+        string fileName;
+        bool isRecording;
+        MemoryStream data;
+        
         bool _directConnect;
         public bool DirectConnection
         {
@@ -91,8 +98,11 @@ namespace NetRadio.ViewModels
 
             // minimize automatic pre-buffering, so we can do it (and display it) instead
             Bass.NetPreBuffer = 0;
+            
             timer = new Timer(50);
-            timer.Elapsed += elapsedTime;
+            timer.Elapsed += ElapsedTime;
+            worker.WorkerSupportsCancellation = true;
+            worker.DoWork += new DoWorkEventHandler(SaveRecordFile);
         }
 
         public void OpenRadioProgram(string url)
@@ -134,6 +144,23 @@ namespace NetRadio.ViewModels
             });
         }
 
+        public void RecordProgram()
+        {
+            if (isRecording)
+            {
+                data.Close();
+                if (!worker.IsBusy)
+                    worker.RunWorkerAsync();
+            }
+            else
+            {
+                data = new MemoryStream();
+                fileName = title;
+                OnMessageChanged(this, new MessageEventArgs("Recording " + title));
+            }
+            isRecording = !isRecording;
+        }
+
         public void Pause()
         {
             IsPlaying = false; 
@@ -148,11 +175,13 @@ namespace NetRadio.ViewModels
         public void CloseBass()
         {
             timer.Stop(); // stop prebuffer monitoring
+            if (worker.IsBusy && worker.WorkerSupportsCancellation)
+                worker.CancelAsync();
             Bass.StreamFree(chan); // close old stream
             Bass.Free();
         }
 
-        void elapsedTime(object sender, EventArgs e)
+        void ElapsedTime(object sender, EventArgs e)
         {
             var progress = Bass.StreamGetFilePosition(chan, FileStreamPosition.Buffer)
                 * 100 / Bass.StreamGetFilePosition(chan, FileStreamPosition.End);   // percentage of buffer filled
@@ -199,7 +228,16 @@ namespace NetRadio.ViewModels
         }
 
         void StatusProc(IntPtr buffer, int length, IntPtr user)
-        {
+        { 
+            if(isRecording) {
+                if (length > 0)
+                {
+                    byte[] temp = new byte[length];
+                    Marshal.Copy(buffer, temp, 0, length);
+                    data.Write(temp,0,length);
+                }
+            }
+
             if (buffer != IntPtr.Zero
                 && length == 0
                 && user.ToInt32() == req) // got HTTP/ICY tags, and this is still the current request
@@ -209,10 +247,13 @@ namespace NetRadio.ViewModels
 
         void EndSync(int Handle, int Channel, int Data, IntPtr User)
         {
-            /*Status = "Not Playing"*/;
+            // wird so nicht erreicht!;
         }
 
-        void MetaSync(int Handle, int Channel, int Data, IntPtr User) => DoMeta();
+        void MetaSync(int Handle, int Channel, int Data, IntPtr User)
+        {
+            DoMeta();
+        }
 
         void DoMeta()
         {
@@ -221,17 +262,23 @@ namespace NetRadio.ViewModels
            
             if (meta != IntPtr.Zero)
             {
-                string res = Marshal.PtrToStringAnsi(meta);   // got Shoutcast metadata
-                byte[] ba = new byte[res.Length];
-                Marshal.Copy(meta,ba, 0, ba.Length);
-                Encoding enc = new UTF8Encoding();
-                res = enc.GetString(ba, 0, ba.Length);
-                string[] parts = res.Split('\'');
-                if (parts.Length > 1)
-                {
-                    data = parts[1];
-                }
-                data = data.TrimEnd(new char[] { '\r','\n' });  // remove new line
+                data = Marshal.PtrToStringAnsi(meta);   // got Shoutcast metadata
+                int idx = data.IndexOf(';');
+                if (idx != -1)
+                    data = data.Substring(0, idx);
+                if (data.StartsWith("StreamTitle="))
+                    data = data.Substring(12);
+                
+                data = data.Trim(new char[] { '\'' });
+                title = data;
+                string[] separators = new string[] { " - ", ": ", " -- " };
+                string[] res = data.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                if (res.Length > 1)
+                    title = res[1];
+                idx = title.IndexOf('(');
+                if (idx != -1)
+                    title = title.Substring(0, idx);
+                title = title.Trim();
             }
             else
             {
@@ -241,14 +288,34 @@ namespace NetRadio.ViewModels
                     foreach (var tag in Extensions.ExtractMultiStringUtf8(meta)) // got Icecast/OGG tags
                     {
                         if (tag.StartsWith("TITLE="))
+                        {
                             data += tag.Substring(6);
+                            title = data.Replace(' ', '_');
+                        }
                         else if (tag.StartsWith("ARTIST="))
-                            if(data.Length > 0 && tag.Length > 7)
+                            if (data.Length > 0 && tag.Length > 7)
                                 data += " - " + tag.Substring(7);
                     }
                 }
             }
             OnMessageChanged(this, new MessageEventArgs(data));
+        }
+
+        void SaveRecordFile(object sender, DoWorkEventArgs args)
+        {
+            if (data != null)
+            {
+                var dlg = new SaveFileDialog();
+                dlg.Filter = "mp3 files (*.mp3)|*.mp3";
+                dlg.FileName = fileName;
+                dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+                if (dlg.ShowDialog() == true)
+                {
+                    File.WriteAllBytes(dlg.FileName, data.ToArray());
+                }
+                data.Dispose();
+                data = null;
+            }
         }
 
         public int GetFFTFrequencyIndex(int frequency)
@@ -261,6 +328,9 @@ namespace NetRadio.ViewModels
             return (Bass.ChannelGetData(chan, fftDataBuffer, -2147483645)) > 0;
         }
 
-        public void Dispose() => timer.Dispose();
+        public void Dispose()
+        {
+            timer.Dispose();
+        }
     }
 }

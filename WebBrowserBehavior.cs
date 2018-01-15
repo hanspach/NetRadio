@@ -121,7 +121,16 @@ namespace NetRadio
             var browser = d as WebBrowser;
             if (browser == null) return;
 
-            browser.Source = (e.NewValue != null) ? new Uri(e.NewValue.ToString()) : null;
+            if(e.NewValue != null)
+            {
+                var uri = new Uri(e.NewValue.ToString());
+                if (uri.IsAbsoluteUri)
+                    browser.Source = uri;
+                else
+                    browser.Source = null;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+            }
+            else 
+                browser.Source =  null;
         }
 
         private static readonly DependencyPropertyKey SilentJavascriptErrorsContextKey =

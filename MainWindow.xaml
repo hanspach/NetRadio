@@ -131,7 +131,8 @@
             </StatusBarItem>
         </StatusBar>
         <StackPanel Margin="20,5"  Orientation="Horizontal" DockPanel.Dock="Bottom">
-            <Button Content="{Binding PlayButtonIconPath}" Command="{Binding PlayProgramCommand}" Template="{StaticResource ImageButton}"  ToolTip="Play" />
+            <Button  x:Name="btnPlay"  Content="{Binding PlayButtonIconPath}" Command="{Binding PlayProgramCommand}" Template="{StaticResource ImageButton}" local:BlinkButtonBehavior.Blink="{Binding Path=IsPauseImage}"  ToolTip="Play" />
+            <Button Content="pack://application:,,,/Resources/Record.png" Template="{StaticResource ImageButton}" Command="{Binding RecordCommand}" ToolTip="Recording" />
             <Button Content="pack://application:,,,/Resources/volume.png" Template="{StaticResource ImageButton}" Command="{Binding MuteCommand}" ToolTip="Volume" />
             <Slider x:Name="slider" VerticalAlignment="Center" TickPlacement="None" Value="{Binding Volume}" Style="{StaticResource Horizontal_Slider}"
                 IsSnapToTickEnabled="True" IsSelectionRangeEnabled="True" Minimum="0" Maximum="100" Margin="5 0" />

@@ -22,6 +22,7 @@ namespace NetRadio
             DataContext = model;
             if(!string.IsNullOrEmpty(ViewModels.Settings.LastVisitedUrl))
                 model.FindTreeNode(ViewModels.Settings.LastVisitedUrl);
+            BlinkButtonBehavior.BlinkButton = this.btnPlay;
         }
 
         private void tv_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -42,14 +43,13 @@ namespace NetRadio
                     }
                 }
                 model.EditViewModel.ResetProperties();
-                model.Message = new ViewModels.MessageModel(string.Empty); // ????
-               // model.PlayButtonIconPath = ViewModels.Settings.ResourcePath + "play.png"; //???? musi is playing on
-               // model.HasPlayed = false;
+                model.Message = new ViewModels.MessageModel(string.Empty); // ???? notendig
+                model.HasPlayed = false;
                 if (item is ViewModels.Program)
                     model.BrowserViewModel.Url = item.Parent.Url;
                 else
                     model.BrowserViewModel.Url = item.Url;  // hier an Json-Data anpassen!
-
+                model.EditViewModel.CurrentProgramProps = null; // ?????????????????
             }
         }
 
