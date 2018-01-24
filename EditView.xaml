@@ -71,12 +71,12 @@
             <DockPanel>
                 <TextBlock DockPanel.Dock="Left" Style="{StaticResource tbstyle}" Text="Name:" Width="50" />
                 <TextBox Text="{Binding Path=ProgramName, UpdateSourceTrigger=PropertyChanged}" BorderThickness="{Binding Path=NameFieldThickness}" 
-                      Margin="5" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" KeyDown="TextBox_KeyDown" />
+                      Margin="5" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" />
             </DockPanel>
             <DockPanel>
                 <TextBlock DockPanel.Dock="Left" Style="{StaticResource tbstyle}" Text="Url:" Width="50" />
                 <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=ProgramUrl, UpdateSourceTrigger=PropertyChanged}" BorderThickness="{Binding Path=UrlFieldThickness}" 
-                       Margin="5" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" KeyDown="TextBox_KeyDown" />
+                       Margin="5" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" />
             </DockPanel>
             <StackPanel Orientation="Horizontal" >
                 <StackPanel.Resources>
@@ -99,7 +99,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <ComboBox Grid.Column="0" ItemsSource="{Binding Countries}" SelectedItem="{Binding SelectedCountry}" Margin="5"/>
-                <TextBox Grid.Column="1" Style="{StaticResource placeHolder}" Tag="Stations" Margin="5" />
+                <TextBox x:Name="txtFilter" Text="{Binding FilterText,Mode=TwoWay}" Grid.Column="1" Style="{StaticResource placeHolder}" Tag="Stations" Margin="5"  TextChanged="TextBox_TextChanged"/>
                 <ComboBox Grid.Column="2"  ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" Margin="5"/>
             </Grid>
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">

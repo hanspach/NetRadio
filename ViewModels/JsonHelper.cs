@@ -165,7 +165,7 @@ namespace NetRadio.ViewModels
             }
         }
 
-        static IEnumerable<T> GetEntries<T>(string filename)
+        public static IEnumerable<T> GetEntries<T>(string filename)
         {
             IEnumerable<T> res = null;
             string content = ReadJsonFile(filename);
@@ -194,7 +194,7 @@ namespace NetRadio.ViewModels
             }
         }
 
-        public static List<ProgramProps> GetDownloadedStations(string filename, string country = "", string category = "")
+        public static List<ProgramProps> GetDownloadedStations(string filename, string country = "", string category = "",string filter="")
         {
             var stations = GetEntries<ProgramProps>(filename);
             if (stations != null)
@@ -208,6 +208,10 @@ namespace NetRadio.ViewModels
                 if (!string.IsNullOrEmpty(category))
                 {
                     stations = stations.Where(i => i.Categories.Exists(c => c.Title == category));
+                }
+                if (!string.IsNullOrEmpty(filter))
+                {
+                    stations = stations.Where(i => i.Name.StartsWith(filter, StringComparison.CurrentCultureIgnoreCase) || i.Name.ToLower().Contains(filter.ToLower()));
                 }
                 foreach (var item in stations)
                 {

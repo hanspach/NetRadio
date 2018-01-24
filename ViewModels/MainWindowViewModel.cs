@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using GongSolutions.Wpf.DragDrop;
 using System;
+using System.IO;
 
 namespace NetRadio.ViewModels
 {
@@ -11,10 +12,12 @@ namespace NetRadio.ViewModels
             GetCurrentMethod().DeclaringType);
 
         private bool isSilence;
-        
+        public bool TreeChanged { get; set; }
+
         public ICommand EditViewCommand { get; private set; }
         public ICommand BrowserViewCommand { get; private set; }
         public ICommand VisualViewCommand { get; private set; }
+        public ICommand SettingViewCommand { get; private set; }
         public ICommand PlayProgramCommand { get; private set; }
         public ICommand MuteCommand { get; private set; }
         public ICommand RecordCommand { get; private set; }
@@ -27,6 +30,7 @@ namespace NetRadio.ViewModels
         public EditViewModel EditViewModel { get; private set; }
         public BrowserViewModel BrowserViewModel { get; private set; }
         public VisualViewModel VisualViewModel { get; private set; }
+        public SettingViewModel SettingViewModel { get; private set; }
 
         private ViewModelBase currentViewModel;
         public ViewModelBase CurrentViewModel
@@ -80,7 +84,7 @@ namespace NetRadio.ViewModels
             set
             {
                 volume = value;
-                Settings.Volume = volume.ToString();
+                Settings.Properties["Volume"] = volume.ToString();
                 WebRadioControl.Instance.SetVolume(volume / 100);
             }
         }
@@ -111,11 +115,16 @@ namespace NetRadio.ViewModels
             EditViewModel = new EditViewModel(this);
             BrowserViewModel = new BrowserViewModel();
             VisualViewModel = new VisualViewModel();
-            CurrentViewModel = EditViewModel;
+            SettingViewModel = new SettingViewModel();
             CountryModel = CountryModel.Instance;
             EditViewCommand = new ActionCommand(delegate { CurrentViewModel = EditViewModel; });
             BrowserViewCommand = new ActionCommand(delegate { CurrentViewModel = BrowserViewModel; });
             VisualViewCommand = new ActionCommand(delegate { CurrentViewModel = VisualViewModel; });
+            SettingViewCommand = new ActionCommand(delegate { CurrentViewModel = SettingViewModel; });
+            if (!File.Exists(Settings.settingsPath))
+                CurrentViewModel = SettingViewModel;
+            else
+                CurrentViewModel = VisualViewModel; // call last saved viewModel!!!!
             PlayProgramCommand = new ActionCommand(Play, CanPlay);
             RecordCommand = new ActionCommand(Record, CanRecord);
             MuteCommand = new ActionCommand(Silence, (o) => { return true; });
@@ -124,31 +133,32 @@ namespace NetRadio.ViewModels
                 {
                     Message = args.Message;
                     if (Message.StatusColorString == "Green")    //program started
-                        Settings.LastVisitedUrl = EditViewModel.CurrentItem.Url;
+                        Settings.Properties["LastVisitedUrl"] = EditViewModel.CurrentItem.Url;
                 }
             });
             PlayButtonIconPath = Settings.ResourcePath + "play.png";
             FavoriteButtonIconPath = Settings.ResourcePath + "white.png";
-            if (string.IsNullOrEmpty(Settings.Volume))
-                Volume = 10;
+            if (Settings.Properties.Contains("Volume"))
+                Volume = float.Parse((string)Settings.Properties["Volume"]);
             else
-                Volume = float.Parse(Settings.Volume);
-
-            Favorite1Command = new ActionCommand((o) => { Favorite(Settings.Favorite1);}, (o) =>  { return IsFavorite(Settings.Favorite1); });
-            Favorite2Command = new ActionCommand((o) => { Favorite(Settings.Favorite2); }, (o) => { return IsFavorite(Settings.Favorite2); });
-            Favorite3Command = new ActionCommand((o) => { Favorite(Settings.Favorite3); }, (o) => { return IsFavorite(Settings.Favorite3);});
+                Volume = 10;
+            if (Settings.Properties.Contains("LastVisitedUrl"))
+                FindTreeNode((string)ViewModels.Settings.Properties["LastVisitedUrl"]);
+            Favorite1Command = new ActionCommand((o) => { Favorite("Favorite1");}, (o) =>  { return IsFavorite("Favorite1"); });
+            Favorite2Command = new ActionCommand((o) => { Favorite("Favorite2"); }, (o) => { return IsFavorite("Favorite2"); });
+            Favorite3Command = new ActionCommand((o) => { Favorite("Favorite3"); }, (o) => { return IsFavorite("Favorite3");});
             AddFavoriteCommand = new ActionCommand((o) => {
                 IsAddFavorite = true;
                 FavoriteButtonIconPath = Settings.ResourcePath + "Redmark.png";
             }, (o) => { return EditViewModel.CurrentItem != null; });
 
-            if (!string.IsNullOrEmpty(Settings.Favorite1.Name))
-                favorite1Name = Settings.Favorite1.Name;
-            if (!string.IsNullOrEmpty(Settings.Favorite2.Name))
-                favorite2Name = Settings.Favorite2.Name;
-            if (!string.IsNullOrEmpty(Settings.Favorite3.Name))
-                favorite3Name = Settings.Favorite3.Name;
-
+            if (Settings.Properties.Contains("Favorite1"))
+                favorite1Name = ((FavoriteItem)Settings.Properties["Favorite1"]).Name;
+            if (Settings.Properties.Contains("Favorite2"))
+                favorite2Name = ((FavoriteItem)Settings.Properties["Favorite2"]).Name;
+            if (Settings.Properties.Contains("Favorite3"))
+                favorite3Name = ((FavoriteItem)Settings.Properties["Favorite3"]).Name;
+           
             WebBrowserBehavior.FixBrowserVersion();       // Eintrag in registry
         }
         
@@ -174,6 +184,7 @@ namespace NetRadio.ViewModels
                 {
                     parentSrc.Programs.RemoveAt(idxSrc);
                     parentDest.Programs.Insert(idxDest, info.Data as Program);
+                    //TreeChanged = true;
                 }
             }
             else if (info.Data is Station && info.TargetItem is Station)
@@ -188,6 +199,7 @@ namespace NetRadio.ViewModels
                 {
                     parentSrc.Stations.RemoveAt(idxSrc);
                     parentDest.Stations.Insert(idxDest, stationSrc);
+                    //TreeChanged = true;
                 }
             }
             else if (info.Data is Country && info.TargetItem is Country)
@@ -201,9 +213,9 @@ namespace NetRadio.ViewModels
                 {
                     parentItem.Countries.RemoveAt(idxSrc);
                     parentItem.Countries.Insert(idxDest, countrySrc);
+                    //TreeChanged = true;
                 }
             }
-            Settings.IsDirty = true;
         }
 
         public bool FindTreeNode(string url)
@@ -273,26 +285,43 @@ namespace NetRadio.ViewModels
             isSilence = !isSilence;
         }
 
-        private void Favorite(FavoriteItem item)
+        private void Favorite(string key)
         {
-            if (IsAddFavorite)
+            if (EditViewModel.CurrentItem != null)
             {
+                var item = new FavoriteItem();
                 item.Url = EditViewModel.CurrentItem.Url;
                 item.Name = EditViewModel.CurrentItem.Name;
-                FavoriteButtonIconPath = Settings.ResourcePath + "white.png";
-                IsAddFavorite = false;
-            }
-            if (FindTreeNode(item.Url))
-            {
-                HasPlayed = false;
-                Play(null);
+                if (IsAddFavorite)
+                {
+                    if (Settings.Properties.Contains(key))
+                        Settings.Properties[key] = item;
+                    else
+                        Settings.Properties.Add(key, item);
+                    FavoriteButtonIconPath = Settings.ResourcePath + "white.png";
+                    IsAddFavorite = false;
+                }
+                else
+                {
+                    if (Settings.Properties.Contains(key))
+                    {
+                        item = (FavoriteItem)Settings.Properties[key];
+                        EditViewModel.CurrentItem.Name = item.Name;
+                        EditViewModel.CurrentItem.Url = item.Url;
+                    }
+                }
+                if (FindTreeNode(item.Url))
+                {
+                    HasPlayed = false;
+                    Play(null);
+                }
             }
         }
 
-        private bool IsFavorite(FavoriteItem item)
+        private bool IsFavorite(string key)
         {
-            return !string.IsNullOrEmpty(item.Url)
-               && !IsAddFavorite || EditViewModel.CurrentItem != null && IsAddFavorite;
+            return Settings.Properties.Contains(key) && !IsAddFavorite || 
+                EditViewModel.CurrentItem != null && IsAddFavorite;
         }
     }
 }

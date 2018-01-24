@@ -13,20 +13,26 @@ namespace NetRadio.ViewModels
         public string Filename { get; private set; }
         public string Country { get; private set; }
         public string Category { get; private set; }
+        public string Filter { get; private set; }
 
-        public StationArgs(string filename, string country, string category)
+        public StationArgs(string filename, string country, string category,string filter)
         {
-            if (country == "All countries")
+            if (country == null ||country == "All countries")
                 Country = string.Empty;
             else
                 Country = country;
-            if (category == "All categories")
+            if (category == null || category == "All categories")
                 Category = string.Empty;
             else
                 Category = category;
+            Filter = filter;
         }
 
-        public StationArgs(string filename) : this(filename, "", "")
+        public StationArgs(string filename) : this(filename, "", "","")
+        {
+        }
+
+        public StationArgs(string filename,string country,string category) : this(filename, country, category, "")
         {
         }
     }
@@ -39,12 +45,13 @@ namespace NetRadio.ViewModels
         private BackgroundWorker worker = new BackgroundWorker();
         private BackgroundWorker countryworker = new BackgroundWorker();
         private BackgroundWorker categoryworker = new BackgroundWorker();
-
+        private string radioProgramFilename = "dirble.json";
         public ObservableCollection<ImageItem> ImagePathes { get; private set; }
         
         public ICommand NewEntryCommand { get; private set; }
         public ICommand AddEntryCommand { get; private set; }
         public ICommand DeleteEntryCommand { get; private set; }
+        public ICommand FilterDataCommand { get; private set; }
 
         private ObservableCollection<ProgramProps> jsonProgramList;
         public ObservableCollection<ProgramProps> JsonProgramList
@@ -54,7 +61,7 @@ namespace NetRadio.ViewModels
                 if (jsonProgramList == null)
                 {
                     if(!worker.IsBusy)
-                        worker.RunWorkerAsync(new StationArgs("data.json"));
+                        worker.RunWorkerAsync(new StationArgs(radioProgramFilename));
                     
                 }
                 return jsonProgramList;
@@ -107,10 +114,10 @@ namespace NetRadio.ViewModels
                         if (CurrentItem != null)
                         {
                             CurrentItem.ImagePath = currentImage.ImagePath;
+                           // mainViewModel.TreeChanged = true;
                             if (isAddEntryPerformed)
                             {
-                                Settings.IsDirty = true;
-                                isAddEntryPerformed = false;
+                               isAddEntryPerformed = false;
                             }
                         }
                     }
@@ -129,9 +136,9 @@ namespace NetRadio.ViewModels
                 if (CurrentItem != null && !isNewEntryPerformed)
                 {
                     CurrentItem.Name = programName;
+                   // mainViewModel.TreeChanged = true;
                     if (isAddEntryPerformed)
                     {
-                        Settings.IsDirty = true;
                         isAddEntryPerformed = false;
                     }
                 }
@@ -162,9 +169,9 @@ namespace NetRadio.ViewModels
                 if (CurrentItem != null && !isNewEntryPerformed)
                 {
                     CurrentItem.Url = programUrl;
+                   // mainViewModel.TreeChanged = true;
                     if (isAddEntryPerformed)
                     {
-                        Settings.IsDirty = true;
                         isAddEntryPerformed = false;
                     }
                 }
@@ -198,7 +205,7 @@ namespace NetRadio.ViewModels
                         args.Result = JsonHelper.GetExistingStates(filename);
                     });
                     
-                    countryworker.RunWorkerAsync("data.json");
+                    countryworker.RunWorkerAsync(radioProgramFilename);
                     countryworker.RunWorkerCompleted += ((s, args) => { Countries = new 
                         ObservableCollection<string>(args.Result as List<string>);
                     });
@@ -225,7 +232,7 @@ namespace NetRadio.ViewModels
                 {
                     SetProperty<string>(ref selectedCountry, value);
                     if (!worker.IsBusy)
-                        worker.RunWorkerAsync(new StationArgs("data.json", SelectedCountry, SelectedCategory));
+                        worker.RunWorkerAsync(new StationArgs(radioProgramFilename, SelectedCountry, SelectedCategory));
                 }
             }
         }
@@ -243,7 +250,7 @@ namespace NetRadio.ViewModels
                         args.Result = JsonHelper.GetExistingCategories(filename);
                     });
 
-                    categoryworker.RunWorkerAsync("data.json");
+                    categoryworker.RunWorkerAsync(radioProgramFilename);
                     categoryworker.RunWorkerCompleted += ((s, args) => {
                         Categories = new ObservableCollection<string>(args.Result as List<string>);
                     });
@@ -272,7 +279,22 @@ namespace NetRadio.ViewModels
                 {
                     SetProperty<string>(ref selectedCategory, value);
                     if (!worker.IsBusy)
-                        worker.RunWorkerAsync(new StationArgs("data.json", SelectedCountry, SelectedCategory));
+                        worker.RunWorkerAsync(new StationArgs(radioProgramFilename, SelectedCountry, SelectedCategory));
+                }
+            }
+        }
+
+        private string filterText;
+        public string FilterText
+        {
+            get { return filterText; }
+            set
+            {
+                SetProperty<string>(ref filterText, value);
+                if (!worker.IsBusy)
+                {
+                    worker.RunWorkerAsync(new StationArgs(radioProgramFilename, SelectedCountry, SelectedCategory, filterText));
+                    Console.WriteLine(filterText);
                 }
             }
         }
@@ -290,10 +312,11 @@ namespace NetRadio.ViewModels
             NewEntryCommand = new ActionCommand(s => { NewItem(s); }, s => { return CurrentItem != null; });
             AddEntryCommand = new ActionCommand(s => { AddItem(s); }, s => { return isNewEntryPerformed; });
             DeleteEntryCommand = new ActionCommand(s => { DeleteItem(s); }, s => {return CurrentItem != null; });
+            
             worker.DoWork += new DoWorkEventHandler(delegate (object sender, DoWorkEventArgs args)
             {
                 var a = args.Argument as StationArgs;
-                args.Result = JsonHelper.GetDownloadedStations("data.json",a.Country,a.Category);
+                args.Result = JsonHelper.GetDownloadedStations(radioProgramFilename, a.Country,a.Category,a.Filter);
             });
             worker.RunWorkerCompleted += ((s, args) =>
             {
@@ -433,9 +456,9 @@ namespace NetRadio.ViewModels
                     country.Stations.Add(station);
                 }
             }
-            Settings.IsDirty = true;
             isNewEntryPerformed = false;
             isAddEntryPerformed = true;
+           // mainViewModel.TreeChanged = true;
             CurrentItem = newItem;
         }
 
@@ -482,7 +505,6 @@ namespace NetRadio.ViewModels
                 else
                     CurrentItem = parent;
             }
-            Settings.IsDirty = true;
         }
 
         public void Dispose() => worker.Dispose();

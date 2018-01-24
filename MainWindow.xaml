@@ -105,6 +105,9 @@
         <DataTemplate DataType="{x:Type viewmodels:VisualViewModel}">
             <local:VisualView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:SettingViewModel}">
+            <local:SettingView />
+        </DataTemplate>
     </Window.Resources>
 
     <DockPanel Background="{StaticResource MainBackground}">
@@ -127,6 +130,7 @@
                     <Button x:Name="btnVisual" Content="pack://application:,,,/Resources/NewDoc.png" Background="Gray" Command="{Binding VisualViewCommand}" Template="{StaticResource ImageButton}"  ToolTip="VisualView" />
                     <Button x:Name="btnEdit" Content="pack://application:,,,/Resources/Modify.png" Background="Gray" Command="{Binding EditViewCommand}" Template="{StaticResource ImageButton}"  ToolTip="EditView"/>
                     <Button x:Name="btnBrowser" Content="pack://application:,,,/Resources/Home.png" Background="Gray" Command="{Binding BrowserViewCommand}" Template="{StaticResource ImageButton}"  ToolTip="BrowserView" />
+                    <Button Content="pack://application:,,,/Resources/Toolbox.png" Background="Gray" Command="{Binding SettingViewCommand}" Template="{StaticResource ImageButton}" ToolTip="SettingView" />
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>
@@ -153,7 +157,7 @@
                 <i:Interaction.Behaviors>
                     <local:ExpanderBehavior />
                 </i:Interaction.Behaviors>
-                <TreeView Name="tv"  ItemsSource="{Binding CountryModel}" SelectedItemChanged="tv_SelectedItemChanged" 
+                <TreeView Name="tv"  ItemsSource="{Binding CountryModel}" SelectedItemChanged="TreeView_SelectedItemChanged" 
                     dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" Background="{StaticResource TreeViewBackground}">
                     <TreeView.ItemContainerStyle>
                         <Style  TargetType="{x:Type TreeViewItem}">

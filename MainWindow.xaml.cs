@@ -18,14 +18,11 @@ namespace NetRadio
         public MainWindow()
         {
             InitializeComponent();
-            var model = new ViewModels.MainWindowViewModel();
-            DataContext = model;
-            if(!string.IsNullOrEmpty(ViewModels.Settings.LastVisitedUrl))
-                model.FindTreeNode(ViewModels.Settings.LastVisitedUrl);
+            DataContext = new ViewModels.MainWindowViewModel();
             BlinkButtonBehavior.BlinkButton = this.btnPlay;
         }
 
-        private void tv_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             var model = DataContext as ViewModels.MainWindowViewModel;
             ViewModels.Item item = e.NewValue as ViewModels.Item;
@@ -57,7 +54,7 @@ namespace NetRadio
         {
             try
             {
-                if (ViewModels.Settings.IsDirty)
+                if (((ViewModels.MainWindowViewModel)DataContext).TreeChanged)
                 {
                     MessageBoxResult result = MessageBox.Show(
                         "The tree view has changed. Should a backup be performed?",
