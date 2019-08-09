@@ -140,6 +140,7 @@ namespace NetRadio.ViewModels
                 if (categories != null)
                     Categories.AddRange(categories);
             }
+            
             States = new List<State>();
             if (File.Exists(jsonPath + "countries.json"))
             {
@@ -147,6 +148,27 @@ namespace NetRadio.ViewModels
                 if (countries != null)
                     States.AddRange(countries);
             }
+            
+        }
+
+        static void WriteToJsonFile<T>(string filename, string content, string delimiter)
+        {
+            int idx, oldidx = 0;
+            using (StreamWriter writer = new StreamWriter(new FileStream(filename, FileMode.Create)))
+            {
+                while ((idx = content.IndexOf(delimiter, oldidx)) != -1)
+                {
+                    idx += delimiter.Length + 1;
+                    writer.WriteLine(content.Substring(oldidx, idx - oldidx));
+                    oldidx = idx;
+                }
+            }
+        }
+
+        static void WriteToJsonFile<T>(string filename, List<T> list, string delimiter)
+        {
+            string sum = JsonConvert.SerializeObject(list);
+            WriteToJsonFile<T>(filename, sum, delimiter);
         }
 
         static string ReadJsonFile(string filename)
@@ -176,7 +198,7 @@ namespace NetRadio.ViewModels
             return res;
         }
 
-        static string ReadDirbleData(string url)
+        static string GetDataFromWebService(string url)
         {
             try
             {
@@ -191,6 +213,15 @@ namespace NetRadio.ViewModels
             {
                 Console.WriteLine("{0} - {1}", e.Message, e.StackTrace);
                 return null;
+            }
+        }
+
+        public static void StoreData<T>(string filename, string url)
+        {
+            string content = GetDataFromWebService(url);
+            if (!string.IsNullOrEmpty(content))
+            {
+                WriteToJsonFile<T>(filename, content, ",");
             }
         }
 
@@ -284,7 +315,7 @@ namespace NetRadio.ViewModels
             url += string.Format("stations?page={0}&token={1}", page, key);
 
             Console.WriteLine("Url:{0}", url);
-            string content = ReadDirbleData(url);   // to errors 404 not found auswerten!
+            string content = GetDataFromWebService(url);   // to errors 404 not found auswerten!
             if (!string.IsNullOrEmpty(content))
             {
                 List<ProgramProps> list = JsonConvert.DeserializeObject<List<ProgramProps>>(content);
@@ -299,16 +330,8 @@ namespace NetRadio.ViewModels
             }
         }
 
-        static void LoadItem(string filename, string url)
-        {
-            string content = ReadDirbleData(url);
-            if (!string.IsNullOrEmpty(content))
-            {
-                using (StreamWriter writer = new StreamWriter(new FileStream(filename, FileMode.Create)))
-                {
-                    writer.Write(content);
-                }
-            }
-        }
+        
+
+        
     }
 }

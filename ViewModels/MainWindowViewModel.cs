@@ -289,9 +289,7 @@ namespace NetRadio.ViewModels
         {
             if (EditViewModel.CurrentItem != null)
             {
-                var item = new FavoriteItem();
-                item.Url = EditViewModel.CurrentItem.Url;
-                item.Name = EditViewModel.CurrentItem.Name;
+                var item = new FavoriteItem(EditViewModel.CurrentItem.Name, EditViewModel.CurrentItem.Url);
                 if (IsAddFavorite)
                 {
                     if (Settings.Properties.Contains(key))

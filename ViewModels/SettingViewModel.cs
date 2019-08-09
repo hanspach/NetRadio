@@ -67,21 +67,17 @@ namespace NetRadio.ViewModels
         {
             SettingsChanedCommand = new ActionCommand(s => { SettingsChanged(s); }, s => { return !string.IsNullOrEmpty(apiKey); });
 
-            if (!string.IsNullOrEmpty((string)Settings.Properties["ApiKey"])) 
+            if (Settings.Properties.Contains("ApiKey")) 
                 ApiKey = (string)Settings.Properties["ApiKey"];
-            if (string.IsNullOrEmpty((string)Settings.Properties["UrlStatesRequest"]))
-                urlStatesRequest = "http://api.dirble.com/v2/countries?";
-            else
+            if (Settings.Properties.Contains("UrlStatesRequest"))
                 urlStatesRequest = (string)Settings.Properties["UrlStatesRequest"];
-            if (string.IsNullOrEmpty((string)Settings.Properties["UrlCategoriesRequest"]))
-                urlCategoriesRequest = "http://api.dirble.com/v2/categories?";
-            else
+           else
+                urlStatesRequest = "http://api.dirble.com/v2/countries?";
+            if (Settings.Properties.Contains("UrlCategoriesRequest"))
                 urlCategoriesRequest = (string)Settings.Properties["UrlCategoriesRequest"];
-            if (!string.IsNullOrEmpty(ApiKey))
-            {
-                UrlStatesRequest += "token=" + ApiKey;
-                UrlCategoriesRequest += "token" + ApiKey;
-            }
+            else
+                urlCategoriesRequest = "http://api.dirble.com/v2/categories?";
+            
             countries = new ObservableCollection<string>();
            
                 foreach (State state in JsonHelper.States)
@@ -94,7 +90,14 @@ namespace NetRadio.ViewModels
 
         private void SettingsChanged(object o)
         {
-            Console.WriteLine("SettingsChanged");
+            if (countries.Count == 0)
+            {
+                JsonHelper.StoreData<State>("countries.json", string.Format("{0}token={1}",urlStatesRequest,apiKey));
+                foreach (State state in JsonHelper.States)
+                {
+                    Countries.Add(state.Name);
+                }
+            }
         }
     }
 }
