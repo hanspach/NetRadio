@@ -6,6 +6,7 @@ using System.Reflection;
 using log4net;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NetRadio.ViewModels
 {
@@ -171,13 +172,13 @@ namespace NetRadio.ViewModels
             WriteToJsonFile<T>(filename, sum, delimiter);
         }
 
-        static string ReadJsonFile(string filename)
+        static async Task<string> ReadJsonFileAsync(string filename)
         {
             try
             {
                 using (StreamReader r = new StreamReader(jsonPath + filename))
                 {
-                    return r.ReadToEnd();
+                    return await r.ReadToEndAsync();
                 }
             }
             catch (Exception e)
@@ -190,10 +191,22 @@ namespace NetRadio.ViewModels
         public static IEnumerable<T> GetEntries<T>(string filename)
         {
             IEnumerable<T> res = null;
-            string content = ReadJsonFile(filename);
-            if (!string.IsNullOrEmpty(content))
+            Task<string> task = ReadJsonFileAsync(filename);
+            task.Wait();
+            if (!string.IsNullOrEmpty(task.Result))
             {
-                res = JsonConvert.DeserializeObject<IEnumerable<T>>(content);
+                res = JsonConvert.DeserializeObject<IEnumerable<T>>(task.Result);
+            }
+            return res;
+        }
+
+        public static IEnumerable<T> GetEntries<T>(string filename, int start, int len)
+        {
+            var res = new List<T>();
+            IEnumerable<T> allEntries = GetEntries<T>(filename);
+            for (int i = start; i < start + len && i < allEntries.Count(); ++i)
+            {
+                res.Add(allEntries.ElementAt(i));
             }
             return res;
         }
