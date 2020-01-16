@@ -19,7 +19,7 @@ namespace NetRadio
         {
             InitializeComponent();
             DataContext = new ViewModels.MainWindowViewModel();
-            BlinkButtonBehavior.BlinkButton = this.btnPlay;
+ //           BlinkButtonBehavior.BlinkButton = this.btnPlay;
         }
 
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

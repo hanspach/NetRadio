@@ -59,6 +59,11 @@ namespace NetRadio.ViewModels
 
         [JsonProperty("listeners")]
         public int Listeners { get; set; }
+
+        public override string ToString()
+        {
+            return Url;
+        }
     }
 
     class State
@@ -105,7 +110,16 @@ namespace NetRadio.ViewModels
 
         private JsonStream currentStream;
         public JsonStream CurrentStream {
-            get { return currentStream; }
+            get {
+                if(currentStream == null)
+                {
+                    if (Streams == null || Streams.Count == 0)
+                        currentStream = new JsonStream();
+                    else
+                        currentStream = Streams[0];
+                }
+                return currentStream;
+            }
             set { SetProperty<JsonStream>(ref currentStream, value); }
         }
 

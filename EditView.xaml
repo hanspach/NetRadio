@@ -130,7 +130,7 @@
                         </DataTemplate>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
- <!--                       <DataGridTextColumn Header="Programm" Binding="{Binding Name}" Width="100"   />
+                        <!--                       <DataGridTextColumn Header="Programm" Binding="{Binding Name}" Width="100"   />
 -->
                         <DataGridTemplateColumn Header="Prgogram" CellTemplate="{StaticResource staname}" CellEditingTemplate="{StaticResource staname}" Width="100" />
                         <DataGridTemplateColumn Header="URLs" CellTemplate="{StaticResource streamie}" CellEditingTemplate="{StaticResource streamie}" Width="250" />

@@ -60,7 +60,8 @@ namespace NetRadio.ViewModels
             {
                 if (jsonProgramList == null)
                 {
-                    if(!worker.IsBusy)
+                    jsonProgramList = new ObservableCollection<ProgramProps>();
+                    if (!worker.IsBusy)
                         worker.RunWorkerAsync(new StationArgs(radioProgramFilename));
                     
                 }
@@ -88,7 +89,14 @@ namespace NetRadio.ViewModels
 
         private ProgramProps currentProgramProps;
         public ProgramProps CurrentProgramProps {
-            get { return currentProgramProps; }
+            get {
+                if (currentProgramProps == null)
+                    if (jsonProgramList == null || jsonProgramList.Count == 0)
+                        currentProgramProps = new ProgramProps();
+                    else
+                        currentProgramProps = JsonProgramList[0];
+                return currentProgramProps;
+                }
             set {
                 if (value != null && currentProgramProps != value)
                 {
